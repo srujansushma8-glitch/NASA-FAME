@@ -18,9 +18,10 @@ NASA-FLAME provides a modular architecture connecting frontend visualization, an
 - `backend/`: **Member 2** (FastAPI, REST APIs, business logic, Member 3 & 4 integration adapters, test suite)
 - `database/`: **Member 2** (SQLAlchemy models, Alembic migrations, reference NASA experiment seeds)
 - `frontend/`: UI dashboards and interactive user controls
-- `simulation/`: Combustion simulation numerical solvers
-- `ai-engine/`: AI diagnostics and combustion regime classification
-- `visualization/`: 3D and 2D spatial contour rendering
+- `simulation/`: **Member 4** (Scientific combustion simulation engine, Roper buoyant jet scaling, Burke-Schumann diffusive flame solvers, 2D axisymmetric thermal grids, 3D surface mesh generation, and side-by-side comparative analysis)
+- `ai-engine/`: **Member 3** (AI diagnostics and combustion regime classification)
+- `visualization/`: **Member 5** (3D and 2D spatial contour rendering)
+- `research/`: **Member 1** (NASA datasets, experimental literature, physical formulations)
 
 ---
 
@@ -68,6 +69,16 @@ uvicorn backend.app.main:app --reload --port 8000
 
 ```powershell
 pytest backend/tests -v
+```
+
+### 5. Run Member 4 Simulation Suite & Demo
+
+```powershell
+# Run simulation unit tests
+python -m unittest discover -s simulation/tests -v
+
+# Run interactive side-by-side simulation demo
+python -m simulation.demo
 ```
 
 ---
