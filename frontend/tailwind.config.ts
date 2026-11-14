@@ -40,6 +40,13 @@ const config: Config = {
         },
       },
       fontFamily: {
+        display: [
+          "Michroma",
+          "Space Grotesk",
+          "Inter",
+          "-apple-system",
+          "sans-serif",
+        ],
         mono: [
           "JetBrains Mono",
           "ui-monospace",
@@ -50,6 +57,7 @@ const config: Config = {
           "monospace",
         ],
         sans: [
+          "Space Grotesk",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
