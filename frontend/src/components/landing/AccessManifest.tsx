@@ -24,8 +24,8 @@ function useCountdown(target: string) {
 }
 
 /**
- * Access Manifest — Adapted from SELENE Reserve.
- * Ticking test-window countdown on one side, research clearance manifest on the other.
+ * Access Manifest — Ticking test-window countdown on one side,
+ * research clearance manifest form on the other.
  */
 export function AccessManifest() {
   const ref = useReveals<HTMLElement>();
@@ -44,7 +44,6 @@ export function AccessManifest() {
     const data = new FormData(form);
     const email = String(data.get("email"));
     setStatus("sent");
-    // Redirect to login with prefilled email
     setTimeout(() => {
       router.push(`/login?email=${encodeURIComponent(email)}`);
     }, 600);
@@ -79,7 +78,7 @@ export function AccessManifest() {
           <h2 id="manifest-title" className="mt-4 font-display text-display text-white">
             {cta.heading}
           </h2>
-          <p className="mt-5 max-w-[28rem] text-body text-regolith/70">{cta.body}</p>
+          <p className="mt-5 max-w-[28rem] text-body text-regolith/70 font-sans">{cta.body}</p>
 
           <div className="mt-10">
             <p className="font-mono text-label text-regolith/50 uppercase">{cta.windowLabel}</p>

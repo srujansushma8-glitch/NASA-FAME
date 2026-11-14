@@ -114,7 +114,7 @@ export function ResearchLog() {
               className="w-[70vw] shrink-0 origin-bottom sm:w-[44vw] md:w-[clamp(16rem,24vw,23rem)]"
             >
               <figure>
-                <div className="relative aspect-[3/4] overflow-hidden rounded-[6px] bg-void-2">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-[6px] bg-void-2 ring-1 ring-white/10">
                   <img
                     ref={(el) => {
                       if (el) imgRefs.current[i] = el;
@@ -127,7 +127,7 @@ export function ResearchLog() {
                     decoding="async"
                     className="size-full object-cover will-change-transform"
                   />
-                  <span className="absolute top-3 left-3 rounded-[3px] bg-void/70 px-2 py-1 font-mono text-[0.625rem] tracking-[0.14em] text-white uppercase backdrop-blur">
+                  <span className="absolute top-3 left-3 rounded-[3px] bg-void/70 px-2 py-1 font-mono text-[0.625rem] tracking-[0.14em] text-white uppercase backdrop-blur ring-1 ring-white/10">
                     {entry.tag}
                   </span>
                 </div>
@@ -137,7 +137,7 @@ export function ResearchLog() {
                     <span className="block font-display text-[0.9375rem] tracking-[0.08em] text-white uppercase">
                       {entry.title}
                     </span>
-                    <span className="mt-1.5 block text-[0.875rem] leading-relaxed text-regolith/65">
+                    <span className="mt-1.5 block text-[0.875rem] leading-relaxed text-regolith/65 font-sans">
                       {entry.body}
                     </span>
                   </span>

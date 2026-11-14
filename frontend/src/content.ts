@@ -1,14 +1,14 @@
 /**
  * NASA-FLAME — Flame in Freefall
- * Scientific research platform content modeling microgravity combustion,
- * droplet burning, and variable-gravity flame dynamics (0g to 1g).
+ * Microgravity Combustion Science & Diagnostics Platform
  */
 
 export const brand = {
   name: "NASA-FLAME",
   wordmark: "NASA-FLAME",
-  submark: "FLAME IN FREEFALL",
-  site: "ISS CIR / ACME · 51.64°N 0.00°E · Alt 408 km",
+  submark: "MICROGRAVITY COMBUSTION SCIENCE",
+  site: "ISS CIR / ACME · 51.64°N 0.00°E · ALT 408 KM",
+  facility: "ISS Combustion Integrated Rack",
   email: "mission-control@nasa-flame.gov",
 };
 
@@ -20,41 +20,49 @@ export const nav = [
 ];
 
 export const hero = {
-  title: "FLAME IN FREEFALL",
+  titleMain: "MICROGRAVITY",
+  titleSub: "COMBUSTION",
   kicker: "Understanding Flame Behaviour Beyond Earth",
-  facility: "ISS Combustion Integrated Rack · 0.0000g Microgravity",
-  coordinates: "CIR/ACME Chamber · 1.0 atm Air · Methane & Heptane",
+  labels: {
+    telemetry: "COMBUSTION RESEARCH",
+    facility: "ISS CIR / ACME CHAMBER",
+    gravity: "GRAVITY 0.000G",
+    regime: "SPHERICAL DIFFUSION",
+    status: "EXPERIMENT STATUS: NOMINAL",
+    coordinates: "51.64°N 0.00°E · ALT 408 KM",
+    scroll: "SCROLL TO EXPLORE",
+  },
 };
 
 export const intro = {
   eyebrow: "Research Experiment Journey",
   heading: "What happens when fire forgets which way is up?",
-  body: "Without buoyancy, hot air does not rise. Convection collapses, and flames become serene, perfectly spherical envelopes governed strictly by molecular diffusion and radiative heat dissipation.",
+  body: "Without buoyancy, hot gas does not rise. Convection collapses, and flames become serene, radially symmetric luminous spheres governed strictly by molecular diffusion and radiative heat dissipation.",
 };
 
 export const log = [
   {
     tag: "Phase 01",
     title: "Chamber Inertion",
-    body: "Vacuum evacuation and inert gas purge within the 110-liter CIR chamber on the ISS.",
+    body: "Evacuation and inert gas purge within the 110-liter CIR chamber aboard the International Space Station.",
     image: "/media/cards/m1-launch.webp",
   },
   {
     tag: "Phase 02",
     title: "Diffusion Ignition",
-    body: "Micro-spark ignition of spherical diffusion flame front in pure 0.0g freefall.",
+    body: "Micro-spark ignition establishing an isotropic, buoyancy-free reaction envelope in pure 0.0g freefall.",
     image: "/media/cards/m2-orbit.webp",
   },
   {
     tag: "Phase 03",
     title: "Soot Aggregation",
-    body: "Stagnant carbon nanoparticles linger in an outer spherical shell, radiating thermal infrared.",
+    body: "Stagnant carbon nanoparticles linger in an outer spherical shell, radiating thermal infrared emissions.",
     image: "/media/cards/m3-base.webp",
   },
   {
     tag: "Phase 04",
     title: "Extinction Limits",
-    body: "Quasi-steady radiative quenching and cool-flame transitions observed at low fuel flow rates.",
+    body: "Quasi-steady radiative quenching and cool-flame transitions observed at low fuel flow thresholds.",
     image: "/media/cards/m4-walk.webp",
   },
 ];
@@ -139,4 +147,3 @@ export const cta = {
   launchWindow: "2026-11-15T00:00:00Z",
   windowLabel: "Next ISS CIR/ACME Test Window",
 };
-

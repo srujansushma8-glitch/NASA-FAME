@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { FlameHero } from "@/components/selene/FlameHero";
-import { ResearchLog } from "@/components/selene/ResearchLog";
-import { WorkflowTrajectory } from "@/components/selene/WorkflowTrajectory";
-import { Capabilities } from "@/components/selene/Capabilities";
-import { AccessManifest } from "@/components/selene/AccessManifest";
+import { FlameHero } from "@/components/landing/FlameHero";
+import { ResearchLog } from "@/components/landing/ResearchLog";
+import { WorkflowTrajectory } from "@/components/landing/WorkflowTrajectory";
+import { Capabilities } from "@/components/landing/Capabilities";
+import { AccessManifest } from "@/components/landing/AccessManifest";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { startScroll } from "@/lib/scroll";
 

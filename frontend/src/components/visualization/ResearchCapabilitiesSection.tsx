@@ -109,7 +109,7 @@ export function ResearchCapabilitiesSection() {
         <div className="max-w-3xl mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-electric/30 bg-electric-950/40 px-3.5 py-1 text-xs font-mono text-electric-400">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>MISSION PLATFORM CAPABILITIES // SELENE ARCHITECTURE</span>
+            <span>MISSION PLATFORM CAPABILITIES // RESEARCH ARCHITECTURE</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold tracking-tight text-white">

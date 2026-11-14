@@ -5,7 +5,7 @@ import { capabilities } from "@/content";
 import { useReveals } from "@/hooks/useReveals";
 
 /**
- * Integrated Research Capabilities — Adapted from SELENE Missions.
+ * Integrated Research Capabilities
  * Three capability cards. Each card carries its diagnostic regime as a set
  * of animated isotherm / orbital rings.
  */

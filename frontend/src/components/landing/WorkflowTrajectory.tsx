@@ -9,7 +9,7 @@ import { onFrame } from "@/lib/scroll";
  * Combustion Research Workflow — Drawn as you scroll.
  * Section pins for 380svh while the four legs of the experiment workflow
  * ink themselves one after another, a sensor capsule riding the leg being drawn;
- * the burn altitude/distance counter ticks up to 408 km (or 384,400 mm).
+ * the burn altitude/distance counter ticks up to 384,400 mm.
  */
 
 const SECTION_VH = 380;
@@ -29,8 +29,6 @@ const LEGS = [
   // Radiative extinction & soot capture
   `M${MOON.cx} ${MOON.cy - 86} Q ${MOON.cx + 40} ${MOON.cy - 70} ${MOON.cx + 30} ${MOON.cy - 36}`,
 ];
-
-const LAYER = { cx: 0.657, cy: 0.498, d: 0.401 };
 
 export function WorkflowTrajectory() {
   const rootRef = useRef<HTMLElement>(null);
@@ -73,8 +71,6 @@ export function WorkflowTrajectory() {
   }, []);
 
   const current = trajectory.legs[leg];
-  const earthW = (EARTH.r * 2) / LAYER.d;
-  const earthH = earthW * (1520 / 2688);
 
   return (
     <section
@@ -108,18 +104,16 @@ export function WorkflowTrajectory() {
             aria-label="Combustion research trajectory: From 1g buoyancy to 0g molecular diffusion across 4 phases."
           >
             <defs>
-              <clipPath id="earth-clip">
-                <circle cx={EARTH.cx} cy={EARTH.cy} r={EARTH.r} />
-              </clipPath>
-              <radialGradient id="moon-shade" cx="35%" cy="35%" r="75%">
-                <stop offset="0" stopColor="#e4e6ea" />
-                <stop offset="0.7" stopColor="#8b909b" />
-                <stop offset="1" stopColor="#2a2e36" />
-              </radialGradient>
               <radialGradient id="earth-glow">
-                <stop offset="0.7" stopColor="#6fb6ff" stopOpacity="0.4" />
-                <stop offset="0.9" stopColor="#ff7029" stopOpacity="0.2" />
+                <stop offset="0.6" stopColor="#6fb6ff" stopOpacity="0.4" />
+                <stop offset="0.85" stopColor="#ff7029" stopOpacity="0.2" />
                 <stop offset="1" stopColor="#6fb6ff" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="target-sphere" cx="40%" cy="40%" r="60%">
+                <stop offset="0%" stopColor="#ffffff" />
+                <stop offset="40%" stopColor="#6fb6ff" />
+                <stop offset="80%" stopColor="#087cff" />
+                <stop offset="100%" stopColor="#05070c" />
               </radialGradient>
             </defs>
 
@@ -136,24 +130,15 @@ export function WorkflowTrajectory() {
               ))}
             </g>
 
-            {/* Earth & Flame Core */}
-            <circle cx={EARTH.cx} cy={EARTH.cy} r={EARTH.r * 1.18} fill="url(#earth-glow)" />
-            <image
-              href="/layers/m/earth.webp"
-              x={EARTH.cx - LAYER.cx * earthW}
-              y={EARTH.cy - LAYER.cy * earthH}
-              width={earthW}
-              height={earthH}
-              clipPath="url(#earth-clip)"
-              preserveAspectRatio="none"
-            />
-            {/* Lunar / Microgravity Chamber Target */}
-            <circle cx={MOON.cx} cy={MOON.cy} r={MOON.r} fill="url(#moon-shade)" />
-            <g fill="#5d626c" opacity="0.6">
-              <circle cx={MOON.cx - 14} cy={MOON.cy - 10} r="7" />
-              <circle cx={MOON.cx + 12} cy={MOON.cy + 14} r="5" />
-              <circle cx={MOON.cx + 18} cy={MOON.cy - 18} r="3.5" />
-            </g>
+            {/* Terrestrial 1g Chamber Station */}
+            <circle cx={EARTH.cx} cy={EARTH.cy} r={EARTH.r * 1.15} fill="url(#earth-glow)" />
+            <circle cx={EARTH.cx} cy={EARTH.cy} r={EARTH.r} fill="#0d1829" stroke="#6fb6ff" strokeWidth="1" strokeOpacity="0.6" />
+            <circle cx={EARTH.cx} cy={EARTH.cy} r={EARTH.r * 0.7} fill="none" stroke="#6fb6ff" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.4" />
+            <circle cx={EARTH.cx} cy={EARTH.cy} r={6} fill="#6fb6ff" />
+
+            {/* Microgravity 0g ISS Flight Station */}
+            <circle cx={MOON.cx} cy={MOON.cy} r={MOON.r} fill="url(#target-sphere)" stroke="#ff7029" strokeWidth="1" strokeOpacity="0.6" />
+            <circle cx={MOON.cx} cy={MOON.cy} r={MOON.r * 1.3} fill="none" stroke="#ff7029" strokeWidth="0.5" strokeDasharray="4 4" opacity="0.4" />
 
             {/* Ghost routes */}
             {LEGS.map((d, i) => (
@@ -218,7 +203,7 @@ export function WorkflowTrajectory() {
             <h3 className="font-display text-[1.125rem] tracking-[0.08em] text-white uppercase md:text-[1.375rem]">
               {current.title}
             </h3>
-            <p className="mt-1.5 max-w-[40rem] text-body text-regolith/70">{current.body}</p>
+            <p className="mt-1.5 max-w-[40rem] text-body text-regolith/70 font-sans">{current.body}</p>
           </div>
           <div className="flex gap-1.5" aria-hidden="true">
             {trajectory.legs.map((_, i) => (
