@@ -17,24 +17,24 @@ export function EmptyState({
   icon = "empty",
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-[#090D16]/60 p-12 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-charcoal-800 border border-border text-slate-400 mb-4">
+    <div className="flex flex-col items-center justify-center rounded-[6px] bg-void-2/60 p-12 text-center ring-1 ring-white/10">
+      <div className="flex size-10 items-center justify-center rounded-[4px] bg-white/[0.04] ring-1 ring-white/10 text-regolith/80 mb-4">
         {icon === "error" ? (
-          <AlertCircle className="h-6 w-6 text-rose-400" />
+          <AlertCircle className="size-5 text-rose-400" />
         ) : (
-          <FolderOpen className="h-6 w-6 text-slate-400" />
+          <FolderOpen className="size-5 text-regolith" />
         )}
       </div>
 
-      <h3 className="font-mono text-sm font-bold text-white uppercase tracking-wider">{title}</h3>
-      <p className="mt-1 max-w-sm text-xs text-slate-400 leading-relaxed">{description}</p>
+      <h3 className="font-display text-[1rem] tracking-[0.08em] text-white uppercase">{title}</h3>
+      <p className="mt-2 max-w-sm text-[0.875rem] text-regolith/65 leading-relaxed font-sans">{description}</p>
 
       {actionLabel && onAction && (
         <button
           onClick={onAction}
-          className="mt-5 inline-flex items-center gap-1.5 rounded-lg bg-charcoal-700 hover:bg-charcoal-600 border border-border px-4 py-2 text-xs font-mono font-medium text-white transition-colors"
+          className="mt-6 inline-flex items-center gap-2 rounded-[4px] bg-white px-4 py-2 font-mono text-label text-void uppercase transition-colors hover:bg-earth"
         >
-          <RefreshCw className="h-3.5 w-3.5" />
+          <RefreshCw className="size-3.5" />
           {actionLabel}
         </button>
       )}
@@ -42,12 +42,17 @@ export function EmptyState({
   );
 }
 
-export function LoadingSpinner({ message = "Computing fluid dynamic combustion models..." }: { message?: string }) {
+export function LoadingSpinner({
+  message = "Computing fluid dynamic combustion models...",
+}: {
+  message?: string;
+}) {
   return (
-    <div className="flex flex-col items-center justify-center p-12 space-y-3">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-700 border-t-electric" />
-      <span className="font-mono text-xs text-slate-400 tracking-wide">{message}</span>
+    <div className="flex flex-col items-center justify-center p-14 space-y-4">
+      <div className="size-7 animate-spin rounded-full border border-earth border-t-transparent" />
+      <span className="font-mono text-label text-regolith/70 uppercase tracking-[0.16em]">
+        {message}
+      </span>
     </div>
   );
 }
-

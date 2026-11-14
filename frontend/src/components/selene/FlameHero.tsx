@@ -299,3 +299,4 @@ export function FlameHero() {
     </section>
   );
 }
+

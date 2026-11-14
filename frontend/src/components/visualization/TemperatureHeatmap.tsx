@@ -129,38 +129,39 @@ export function TemperatureHeatmap({
   };
 
   return (
-    <div className="flex flex-col rounded-xl border border-border bg-[#090D16] p-4 shadow-lg">
-      <div className="flex items-center justify-between pb-3 border-b border-border/60">
+    <div className="relative flex flex-col rounded-[6px] bg-void-2 p-5 ring-1 ring-white/10 shadow-2xl overflow-hidden">
+      <div className="brackets pointer-events-none absolute inset-0 text-regolith/20" />
+      <div className="flex items-center justify-between pb-3 border-b border-white/10 relative z-10">
         <div>
-          <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">
+          <span className="font-display text-[0.875rem] tracking-[0.08em] text-white uppercase">
             {title}
           </span>
-          <p className="text-[11px] font-mono text-slate-400">
+          <p className="text-[0.75rem] font-mono text-regolith/60 mt-0.5">
             Eulerian grid temperature distribution &bull; Spatial isotherms
           </p>
         </div>
         {hoverData && (
-          <div className="rounded bg-charcoal-800 border border-border px-2.5 py-1 text-[11px] font-mono text-electric-300">
+          <div className="rounded-[3px] bg-void/80 ring-1 ring-white/20 px-2.5 py-1 text-[0.6875rem] font-mono text-earth tabular-nums">
             X: {hoverData.x.toFixed(1)}mm | Y: {hoverData.y.toFixed(1)}mm | {hoverData.temp.toFixed(0)} K
           </div>
         )}
       </div>
 
-      <div className="relative mt-3 flex items-center justify-center">
+      <div className="relative mt-4 flex items-center justify-center relative z-10">
         <canvas
           ref={canvasRef}
           width={320}
           height={260}
           onMouseMove={handleMouseMove}
           onMouseLeave={() => setHoverData(null)}
-          className="h-64 w-full rounded border border-border/40 bg-black cursor-crosshair object-contain"
+          className="h-64 w-full rounded-[4px] ring-1 ring-white/10 bg-void cursor-crosshair object-contain"
         />
 
         {/* Temperature Color Scale Bar */}
-        <div className="absolute right-2 bottom-3 flex flex-col items-center bg-black/75 p-1.5 rounded border border-border/40 text-[9px] font-mono text-slate-300">
+        <div className="absolute right-3 bottom-3 flex flex-col items-center bg-void/90 p-2 rounded-[3px] ring-1 ring-white/10 text-[0.625rem] font-mono text-regolith/75">
           <span>{maxTempK}K</span>
           <div
-            className="my-1 w-2.5 h-24 rounded-sm border border-slate-700"
+            className="my-1.5 w-2 h-24 rounded-[1px] ring-1 ring-white/10"
             style={{
               background: "linear-gradient(to bottom, #FFFFFF, #FFE066, #FF7029, #087CFF, #0A1B30)",
             }}

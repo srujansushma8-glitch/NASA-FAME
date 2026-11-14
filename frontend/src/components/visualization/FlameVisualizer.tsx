@@ -37,27 +37,30 @@ export function FlameVisualizer({
   const heightVal = flameHeightMm || (isTeardrop ? flameRadiusMm * 2.8 : flameRadiusMm * 1.5);
 
   return (
-    <div className="relative flex flex-col rounded-xl border border-border bg-[#090D16] p-4 shadow-lg overflow-hidden">
+    <div className="relative flex flex-col rounded-[6px] bg-void-2 p-5 ring-1 ring-white/10 overflow-hidden shadow-2xl">
+      {/* Corner HUD Brackets */}
+      <div className="brackets pointer-events-none absolute inset-0 text-regolith/25" />
+
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-border/60">
+      <div className="flex items-center justify-between pb-3 border-b border-white/10 relative z-10">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">
+            <span className="font-display text-[0.875rem] tracking-[0.08em] text-white uppercase">
               {title}
             </span>
             <span
-              className={`rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold border ${
+              className={`rounded-[3px] px-2 py-0.5 text-[0.625rem] font-mono tracking-widest uppercase ring-1 ${
                 isZeroG
-                  ? "bg-electric-900/40 text-electric-400 border-electric-600/40"
+                  ? "bg-earth/15 text-earth ring-earth/30"
                   : isTransitional
-                  ? "bg-amber-950/40 text-amber-400 border-amber-700/40"
-                  : "bg-flame-950/40 text-flame-400 border-flame-700/40"
+                  ? "bg-amber-950/40 text-amber-300 ring-amber-500/30"
+                  : "bg-flame/15 text-flame ring-flame/30"
               }`}
             >
-              {isZeroG ? "0.0g SPHERICAL" : isTransitional ? `${gravity.toFixed(2)}g TRANSITIONAL` : "1.0g BUOYANT PLUME"}
+              {isZeroG ? "0.0g Spherical" : isTransitional ? `${gravity.toFixed(2)}g Transitional` : "1.0g Buoyant Plume"}
             </span>
           </div>
-          <p className="text-[11px] font-mono text-slate-400">
+          <p className="text-[0.75rem] font-mono text-regolith/60 mt-0.5">
             {isZeroG
               ? "Diffusion-governed radially symmetric Burke-Schumann flame"
               : isTransitional
@@ -67,215 +70,166 @@ export function FlameVisualizer({
         </div>
 
         {showControls && (
-          <div className="flex items-center gap-1 text-slate-400">
+          <div className="flex items-center gap-1.5 text-regolith/70">
             <button
+              type="button"
               onClick={() => setShowIsotherms(!showIsotherms)}
               title="Toggle Thermal Isotherms"
-              className={`p-1.5 rounded hover:bg-charcoal-700 text-xs transition-colors ${
-                showIsotherms ? "text-electric-400 bg-charcoal-800" : "text-slate-500"
+              className={`p-1.5 rounded-[3px] ring-1 transition-colors ${
+                showIsotherms
+                  ? "text-earth bg-white/[0.08] ring-earth/40"
+                  : "text-regolith/50 ring-white/10 hover:text-white"
               }`}
             >
-              <Layers className="h-3.5 w-3.5" />
+              <Layers className="size-3.5" />
             </button>
             <button
+              type="button"
               onClick={() => setShowSootShell(!showSootShell)}
-              title="Toggle Soot Shell"
-              className={`p-1.5 rounded hover:bg-charcoal-700 text-xs transition-colors ${
-                showSootShell ? "text-flame-400 bg-charcoal-800" : "text-slate-500"
+              title="Toggle Soot Nanoparticle Boundary"
+              className={`p-1.5 rounded-[3px] ring-1 transition-colors ${
+                showSootShell
+                  ? "text-flame bg-white/[0.08] ring-flame/40"
+                  : "text-regolith/50 ring-white/10 hover:text-white"
               }`}
             >
-              <Eye className="h-3.5 w-3.5" />
+              <Eye className="size-3.5" />
             </button>
             <button
+              type="button"
               onClick={() => setShowGrid(!showGrid)}
-              title="Toggle Grid Coordinates"
-              className={`p-1.5 rounded hover:bg-charcoal-700 text-xs transition-colors ${
-                showGrid ? "text-slate-300 bg-charcoal-800" : "text-slate-500"
+              title="Toggle Scale Grid"
+              className={`p-1.5 rounded-[3px] ring-1 transition-colors ${
+                showGrid
+                  ? "text-white bg-white/[0.08] ring-white/30"
+                  : "text-regolith/50 ring-white/10 hover:text-white"
               }`}
             >
-              <ZoomIn className="h-3.5 w-3.5" />
+              <ZoomIn className="size-3.5" />
             </button>
           </div>
         )}
       </div>
 
-      {/* Flame Visualizer Viewport */}
-      <div className="relative mt-3 flex items-center justify-center min-h-[280px] w-full rounded-lg bg-[#06080E] border border-border/40 overflow-hidden">
-        {/* Spatial background grid */}
+      {/* SVG Canvas Stage */}
+      <div className="relative mt-4 flex items-center justify-center min-h-[300px] w-full bg-void rounded-[4px] ring-1 ring-white/10 overflow-hidden">
+        {/* Eulerian Coordinate Grid */}
         {showGrid && (
-          <div
-            className="absolute inset-0 opacity-20 pointer-events-none"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, #202D45 1px, transparent 1px), linear-gradient(to bottom, #202D45 1px, transparent 1px)",
-              backgroundSize: "20px 20px",
-            }}
-          />
+          <svg className="absolute inset-0 size-full opacity-15" aria-hidden="true">
+            <defs>
+              <pattern id="flame-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#6fb6ff" strokeWidth="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#flame-grid)" />
+          </svg>
         )}
 
-        {/* Burner / Nozzle Representation at bottom center */}
-        <div className="absolute bottom-2 flex flex-col items-center z-10">
-          <div className="h-4 w-12 rounded-t-sm bg-gradient-to-t from-slate-800 to-slate-600 border-t border-x border-slate-500 flex items-center justify-center">
-            <span className="text-[8px] font-mono text-slate-300">BURNER</span>
-          </div>
-          <div className="h-3 w-8 bg-slate-900 border-x border-slate-700" />
-        </div>
-
-        {/* SVG Flame Rendering */}
-        <svg
-          viewBox="-120 -160 240 200"
-          className="relative h-64 w-full max-w-[340px] drop-shadow-2xl"
-        >
+        {/* Burner and Flame SVG */}
+        <svg viewBox="0 0 400 320" className="size-full max-h-[320px] relative z-10">
           <defs>
-            {/* 0g Radial Gradient */}
-            <radialGradient id="sphericalCore" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-              <stop offset="30%" stopColor="#FFE066" stopOpacity="0.9" />
-              <stop offset="60%" stopColor="#FF7029" stopOpacity="0.75" />
-              <stop offset="85%" stopColor="#087CFF" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#087CFF" stopOpacity="0" />
+            <radialGradient id="sphere-core" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="25%" stopColor="#6fb6ff" stopOpacity="0.85" />
+              <stop offset="55%" stopColor="#ffaa40" stopOpacity="0.7" />
+              <stop offset="85%" stopColor="#ff7029" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#ff7029" stopOpacity="0" />
             </radialGradient>
 
-            {/* 1g Vertical Buoyancy Gradient */}
-            <linearGradient id="teardropPlume" x1="50%" y1="100%" x2="50%" y2="0%">
-              <stop offset="0%" stopColor="#087CFF" stopOpacity="0.9" />
-              <stop offset="25%" stopColor="#FFE066" stopOpacity="0.95" />
-              <stop offset="65%" stopColor="#FF7029" stopOpacity="0.85" />
-              <stop offset="90%" stopColor="#FF3300" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#551100" stopOpacity="0" />
+            <linearGradient id="plume-grad" x1="50%" y1="100%" x2="50%" y2="0%">
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.95" />
+              <stop offset="20%" stopColor="#6fb6ff" stopOpacity="0.9" />
+              <stop offset="50%" stopColor="#ffaa40" stopOpacity="0.8" />
+              <stop offset="85%" stopColor="#ff7029" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#b91c1c" stopOpacity="0" />
             </linearGradient>
 
-            {/* Transitional Gradient */}
-            <radialGradient id="transitionalGradient" cx="50%" cy="65%" r="60%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-              <stop offset="35%" stopColor="#FFE880" stopOpacity="0.85" />
-              <stop offset="70%" stopColor="#FF7029" stopOpacity="0.7" />
-              <stop offset="95%" stopColor="#087CFF" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#087CFF" stopOpacity="0" />
+            <radialGradient id="soot-layer" cx="50%" cy="50%" r="50%">
+              <stop offset="75%" stopColor="transparent" />
+              <stop offset="90%" stopColor="#ff7029" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#78350f" stopOpacity="0.6" />
             </radialGradient>
           </defs>
 
-          {/* Zero-g: Symmetrical Burke-Schumann Sphere */}
+          {/* Burner Tube Assembly */}
+          <rect x="190" y="240" width="20" height="70" fill="#1e293b" stroke="#334155" strokeWidth="1" />
+          <line x1="185" y1="240" x2="215" y2="240" stroke="#64748b" strokeWidth="2" />
+          <circle cx="200" cy="240" r="3" fill="#6fb6ff" />
+
+          {/* 0g Microgravity Spherical Flame */}
           {isZeroG && (
-            <g transform="translate(0, -50)">
-              {/* Thermal Isotherm Outlines */}
+            <g transform="translate(200, 200)">
               {showIsotherms && (
                 <>
-                  <circle cx="0" cy="0" r="75" fill="none" stroke="#087CFF" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-                  <circle cx="0" cy="0" r="62" fill="none" stroke="#FF7029" strokeWidth="1" strokeDasharray="2 2" opacity="0.4" />
+                  <circle r="78" fill="none" stroke="#6fb6ff" strokeWidth="0.75" strokeDasharray="3 3" opacity="0.4" />
+                  <circle r="60" fill="none" stroke="#ffaa40" strokeWidth="0.75" strokeDasharray="4 2" opacity="0.5" />
+                  <circle r="42" fill="none" stroke="#ff7029" strokeWidth="0.75" opacity="0.6" />
                 </>
               )}
 
-              {/* Soot shell ring - characteristic microgravity soot stagnation */}
               {showSootShell && (
-                <circle
-                  cx="0"
-                  cy="0"
-                  r="52"
-                  fill="none"
-                  stroke="#FF9500"
-                  strokeWidth="2.5"
-                  opacity="0.6"
-                  className="animate-pulse"
-                />
+                <circle r="72" fill="url(#soot-layer)" stroke="#ff7029" strokeWidth="1.2" strokeOpacity="0.6" />
               )}
 
-              {/* Luminous Reaction Zone */}
-              <circle cx="0" cy="0" r="45" fill="url(#sphericalCore)" />
-
-              {/* Inner Core */}
-              <circle cx="0" cy="0" r="18" fill="#FFFBE6" opacity="0.9" />
-
-              {/* Dimension callout */}
-              <line x1="0" y1="0" x2="45" y2="0" stroke="#087CFF" strokeWidth="1.5" />
-              <circle cx="45" cy="0" r="2.5" fill="#087CFF" />
-              <text x="10" y="-6" fill="#087CFF" fontSize="10" fontFamily="monospace" fontWeight="bold">
-                R={flameRadiusMm.toFixed(1)}mm
-              </text>
+              <circle r="48" fill="url(#sphere-core)" className="animate-pulse" style={{ animationDuration: "3s" }} />
+              <circle r="8" fill="#ffffff" opacity="0.9" filter="drop-shadow(0 0 8px #6fb6ff)" />
             </g>
           )}
 
-          {/* Transitional: Partial-g Oblate Oval (Lunar 0.16g / Mars 0.38g) */}
-          {isTransitional && (
-            <g transform="translate(0, -40)">
-              {showIsotherms && (
-                <ellipse cx="0" cy="-10" rx="65" ry="75" fill="none" stroke="#FF7029" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-              )}
-              {showSootShell && (
-                <ellipse cx="0" cy="-8" rx="50" ry="60" fill="none" stroke="#FFB020" strokeWidth="2" opacity="0.55" />
-              )}
-              {/* Oblate flame body */}
-              <ellipse cx="0" cy="-8" rx="42" ry="52" fill="url(#transitionalGradient)" />
-              <ellipse cx="0" cy="0" rx="18" ry="22" fill="#FFFFFF" opacity="0.85" />
-
-              {/* Dimension indicators */}
-              <line x1="0" y1="0" x2="42" y2="0" stroke="#087CFF" strokeWidth="1.5" />
-              <text x="8" y="-4" fill="#087CFF" fontSize="9" fontFamily="monospace" fontWeight="bold">
-                R={flameRadiusMm.toFixed(1)}mm
-              </text>
-            </g>
-          )}
-
-          {/* Terrestrial 1g: Elongated Buoyant Teardrop Plume */}
+          {/* 1g Terrestrial Buoyant Teardrop Flame */}
           {isTeardrop && (
-            <g transform="translate(0, 0)">
+            <g transform="translate(200, 240)">
               {showIsotherms && (
                 <path
-                  d="M -35, -5 C -45, -50 -25, -115 0, -145 C 25, -115 45, -50 35, -5 Z"
+                  d="M0,0 C-35,-20 -40,-80 0,-140 C40,-80 35,-20 0,0 Z"
                   fill="none"
-                  stroke="#FF7029"
-                  strokeWidth="1"
-                  strokeDasharray="3 3"
-                  opacity="0.35"
+                  stroke="#6fb6ff"
+                  strokeWidth="0.75"
+                  strokeDasharray="4 2"
+                  opacity="0.4"
                 />
               )}
 
-              {/* Convective teardrop geometry */}
               <path
-                d="M -26, -5 C -34, -40 -18, -95 0, -125 C 18, -95 34, -40 26, -5 Z"
-                fill="url(#teardropPlume)"
+                d="M0,0 C-30,-15 -35,-65 0,-125 C35,-65 30,-15 0,0 Z"
+                fill="url(#plume-grad)"
+                className="animate-pulse"
+                style={{ animationDuration: "1.2s" }}
               />
 
-              {/* Intense base & core */}
               <path
-                d="M -14, -5 C -18, -25 -8, -60 0, -80 C 8, -60 18, -25 14, -5 Z"
-                fill="#FFFBEA"
-                opacity="0.9"
+                d="M0,0 C-14,-10 -15,-40 0,-70 C15,-40 14,-10 0,0 Z"
+                fill="#ffffff"
+                opacity="0.85"
+                filter="drop-shadow(0 0 6px #6fb6ff)"
               />
-
-              {/* Blue flame base anchor (chemiluminescent root) */}
-              <ellipse cx="0" cy="-5" rx="16" ry="6" fill="#087CFF" opacity="0.8" />
-
-              {/* Height callout */}
-              <line x1="40" y1="-5" x2="40" y2="-125" stroke="#FF7029" strokeWidth="1.5" />
-              <line x1="36" y1="-5" x2="44" y2="-5" stroke="#FF7029" strokeWidth="1.5" />
-              <line x1="36" y1="-125" x2="44" y2="-125" stroke="#FF7029" strokeWidth="1.5" />
-              <text x="46" y="-65" fill="#FF7029" fontSize="9" fontFamily="monospace" fontWeight="bold">
-                H={heightVal.toFixed(1)}mm
-              </text>
             </g>
           )}
+
+          {/* Transitional Partial Gravity Oblate Flame */}
+          {isTransitional && (
+            <g transform="translate(200, 215)">
+              {showIsotherms && (
+                <ellipse cx="0" cy="-10" rx="58" ry="46" fill="none" stroke="#ffaa40" strokeWidth="0.75" strokeDasharray="3 3" opacity="0.5" />
+              )}
+              <ellipse cx="0" cy="-10" rx="46" ry="38" fill="url(#sphere-core)" />
+              <circle cx="0" cy="5" r="7" fill="#ffffff" opacity="0.9" />
+            </g>
+          )}
+
+          {/* Scale Axis Markers */}
+          <line x1="20" y1="280" x2="60" y2="280" stroke="#8b909b" strokeWidth="1.5" />
+          <text x="40" y="272" fill="#8b909b" fontSize="9" fontFamily="IBM Plex Mono" textAnchor="middle">
+            10 mm
+          </text>
         </svg>
 
-        {/* Legend overlays */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1 text-[10px] font-mono text-slate-400 bg-black/60 p-2 rounded border border-border/50">
-          <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-white" />
-            <span>Peak Temp: {maxTemperatureK.toFixed(0)} K</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-electric-400" />
-            <span>Gravity Field: {gravity.toFixed(3)} g</span>
-          </div>
-          {sootFraction > 0 && (
-            <div className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-flame-400" />
-              <span>Soot Fraction: {(sootFraction * 1e6).toFixed(1)} ppm</span>
-            </div>
-          )}
+        {/* Live Geometry Readout Pill */}
+        <div className="absolute bottom-3 left-3 rounded-[3px] bg-void/80 px-2.5 py-1.5 font-mono text-[0.625rem] tracking-[0.14em] text-regolith/80 uppercase backdrop-blur ring-1 ring-white/10">
+          Radius: <span className="text-white font-bold">{flameRadiusMm.toFixed(1)} mm</span> • Peak:{" "}
+          <span className="text-earth font-bold">{maxTemperatureK} K</span>
         </div>
       </div>
     </div>
   );
 }
-

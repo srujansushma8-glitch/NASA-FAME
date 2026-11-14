@@ -102,56 +102,57 @@ export function MetricTimeSeriesChart({
   const areaD = `${pathD} L ${scaleX(maxX)} ${scaleY(minY)} L ${scaleX(minX)} ${scaleY(minY)} Z`;
 
   return (
-    <div className="flex flex-col rounded-xl border border-border bg-[#090D16] p-4 shadow-lg">
+    <div className="relative flex flex-col rounded-[6px] bg-void-2 p-5 ring-1 ring-white/10 shadow-2xl overflow-hidden">
+      <div className="brackets pointer-events-none absolute inset-0 text-regolith/20" />
       {/* Header with Metric Selectors */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-white/10 relative z-10">
         <div>
-          <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">
+          <span className="font-display text-[0.875rem] tracking-[0.08em] text-white uppercase">
             {title}
           </span>
-          <p className="text-[11px] font-mono text-slate-400">
+          <p className="text-[0.75rem] font-mono text-regolith/60 mt-0.5">
             Transient numerical solver trajectory across physical duration
           </p>
         </div>
 
         {/* Metric Selector Buttons */}
-        <div className="flex items-center gap-1 rounded-lg bg-charcoal-800 p-1 border border-border/60">
+        <div className="flex items-center gap-1 rounded-[4px] bg-white/[0.04] p-1 ring-1 ring-white/10">
           <button
             onClick={() => setMetric("temperature")}
-            className={`px-2.5 py-1 text-[11px] font-mono rounded font-medium transition-colors ${
+            className={`px-2.5 py-1 text-[0.625rem] font-mono rounded-[2px] uppercase tracking-wider transition-colors ${
               metric === "temperature"
-                ? "bg-flame-950 text-flame-400 border border-flame-700/50"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-flame/20 text-flame ring-1 ring-flame/40"
+                : "text-regolith/60 hover:text-white"
             }`}
           >
             Temp (K)
           </button>
           <button
             onClick={() => setMetric("radius")}
-            className={`px-2.5 py-1 text-[11px] font-mono rounded font-medium transition-colors ${
+            className={`px-2.5 py-1 text-[0.625rem] font-mono rounded-[2px] uppercase tracking-wider transition-colors ${
               metric === "radius"
-                ? "bg-electric-950 text-electric-400 border border-electric-700/50"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-earth/20 text-earth ring-1 ring-earth/40"
+                : "text-regolith/60 hover:text-white"
             }`}
           >
             Radius (mm)
           </button>
           <button
             onClick={() => setMetric("burn_rate")}
-            className={`px-2.5 py-1 text-[11px] font-mono rounded font-medium transition-colors ${
+            className={`px-2.5 py-1 text-[0.625rem] font-mono rounded-[2px] uppercase tracking-wider transition-colors ${
               metric === "burn_rate"
-                ? "bg-emerald-950 text-emerald-400 border border-emerald-700/50"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-emerald-950/60 text-emerald-400 ring-1 ring-emerald-500/40"
+                : "text-regolith/60 hover:text-white"
             }`}
           >
             Burn Rate
           </button>
           <button
             onClick={() => setMetric("soot")}
-            className={`px-2.5 py-1 text-[11px] font-mono rounded font-medium transition-colors ${
+            className={`px-2.5 py-1 text-[0.625rem] font-mono rounded-[2px] uppercase tracking-wider transition-colors ${
               metric === "soot"
-                ? "bg-amber-950 text-amber-400 border border-amber-700/50"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-amber-950/60 text-amber-400 ring-1 ring-amber-500/40"
+                : "text-regolith/60 hover:text-white"
             }`}
           >
             Soot

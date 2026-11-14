@@ -74,45 +74,46 @@ export function DimensionlessGauge({ numbers, regime }: DimensionlessGaugeProps)
   ];
 
   return (
-    <div className="flex flex-col rounded-xl border border-border bg-[#090D16] p-4 shadow-lg">
-      <div className="flex items-center justify-between pb-3 border-b border-border/60">
+    <div className="relative flex flex-col rounded-[6px] bg-void-2 p-5 ring-1 ring-white/10 shadow-2xl overflow-hidden">
+      <div className="brackets pointer-events-none absolute inset-0 text-regolith/20" />
+      <div className="flex items-center justify-between pb-3 border-b border-white/10 relative z-10">
         <div>
-          <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">
+          <span className="font-display text-[0.875rem] tracking-[0.08em] text-white uppercase">
             Dimensionless Scaling Numbers (Member 3 AI Engine)
           </span>
-          <p className="text-[11px] font-mono text-slate-400">
+          <p className="text-[0.75rem] font-mono text-regolith/60 mt-0.5">
             Fluid dynamic similarity metrics defining microgravity vs terrestrial regime
           </p>
         </div>
         {regime && (
-          <span className="rounded bg-electric-950/60 border border-electric-700/50 px-2.5 py-1 text-[11px] font-mono text-electric-300">
+          <span className="rounded-[3px] bg-earth/15 ring-1 ring-earth/30 px-2.5 py-1 text-[0.625rem] font-mono text-earth uppercase tracking-widest">
             {regime}
           </span>
         )}
       </div>
 
-      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 relative z-10">
         {items.map((item, idx) => (
           <div
             key={idx}
-            className="flex flex-col rounded-lg bg-charcoal-800/80 border border-border/60 p-3 hover:border-slate-600 transition-colors"
+            className="flex flex-col rounded-[4px] bg-white/[0.03] ring-1 ring-white/10 p-3.5 hover:ring-white/25 transition-all"
           >
             <div className="flex items-center justify-between">
-              <span className="font-mono text-lg font-extrabold text-white">
+              <span className="font-display text-[1.125rem] font-bold text-white">
                 {item.symbol}
               </span>
-              <span className="text-[10px] font-mono text-slate-500">{item.formula}</span>
+              <span className="text-[0.625rem] font-mono text-regolith/50">{item.formula}</span>
             </div>
-            <div className="text-xs font-medium text-slate-300 mt-0.5">{item.name}</div>
+            <div className="text-[0.75rem] font-mono text-regolith/80 uppercase mt-0.5">{item.name}</div>
 
-            <div className={`mt-2 font-mono text-xl font-bold ${item.color}`}>
+            <div className={`mt-2 font-display text-[1.5rem] ${item.color} leading-tight`}>
               {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
             </div>
 
-            <div className="mt-2 text-[10px] text-slate-400 leading-tight">
+            <div className="mt-2 text-[0.75rem] text-regolith/60 leading-tight font-sans">
               {item.description}
             </div>
-            <div className="mt-1 text-[10px] font-mono text-slate-300 font-medium">
+            <div className="mt-1 text-[0.6875rem] font-mono text-regolith/80">
               &bull; {item.interpretation}
             </div>
           </div>
