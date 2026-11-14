@@ -1,24 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Michroma&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #05070d;
-  --foreground: #f8fafc;
+/* Lenis styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  overflow-x: hidden;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    background: #05070c;
+  }
+  body {
+    margin: 0;
+    background: #05070c;
+    color: #c9ccd3;
+    font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: #6fb6ff;
+    color: #05070c;
+  }
+  :focus-visible {
+    outline: 1.5px solid #6fb6ff;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 }
 
-/* Aerospace display typography */
-.font-display {
-  font-family: "Michroma", "Space Grotesk", sans-serif;
+@layer utilities {
+  .h-screen-s {
+    height: 100svh;
+  }
+
+  /* HUD corner brackets */
+  .brackets {
+    background:
+      linear-gradient(currentColor, currentColor) top left / 14px 1px,
+      linear-gradient(currentColor, currentColor) top left / 1px 14px,
+      linear-gradient(currentColor, currentColor) top right / 14px 1px,
+      linear-gradient(currentColor, currentColor) top right / 1px 14px,
+      linear-gradient(currentColor, currentColor) bottom left / 14px 1px,
+      linear-gradient(currentColor, currentColor) bottom left / 1px 14px,
+      linear-gradient(currentColor, currentColor) bottom right / 14px 1px,
+      linear-gradient(currentColor, currentColor) bottom right / 1px 14px;
+    background-repeat: no-repeat;
+  }
+
+  [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+    transition:
+      opacity 1s cubic-bezier(0.2, 0.7, 0.1, 1),
+      transform 1s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      transform: none;
+    }
+  }
+}
+
+@keyframes leg-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
 }
 
 /* Custom subtle dark scrollbars */
@@ -26,60 +88,13 @@ body {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #05070d;
+  background: #05070c;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
   border-radius: 3px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #087cff;
+  background: #334155;
 }
-
-/* Starfield and cosmic glow animations */
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.9); }
-  50% { opacity: 0.8; transform: scale(1.1); }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.4; filter: blur(40px); }
-  50% { opacity: 0.7; filter: blur(55px); }
-}
-
-@keyframes floatParticle {
-  0% { transform: translateY(0px) translateX(0px); opacity: 0; }
-  10% { opacity: 0.8; }
-  90% { opacity: 0.8; }
-  100% { transform: translateY(-80px) translateX(20px); opacity: 0; }
-}
-
-.animate-twinkle {
-  animation: twinkle 4s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 6s ease-in-out infinite;
-}
-
-/* Glassmorphism panel styling */
-.glass-panel {
-  background: rgba(13, 19, 31, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(46, 63, 92, 0.4);
-}
-
-.glass-panel-glow {
-  background: rgba(13, 19, 31, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(8, 124, 255, 0.25);
-  box-shadow: 0 0 25px rgba(8, 124, 255, 0.08);
-}
-
-

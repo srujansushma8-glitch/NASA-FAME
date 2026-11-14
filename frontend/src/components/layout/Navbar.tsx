@@ -1,140 +1,287 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Flame, Activity, Compass, Cpu, History, Play, CheckCircle2, AlertCircle } from "lucide-react";
+import { brand } from "@/content";
+import { scrollToHash } from "@/lib/scroll";
+import { useAuth } from "@/lib/auth-context";
 import { api } from "@/lib/api";
 import { HealthResponse } from "@/types";
+import { LogOut, Activity, Compass, Play, Cpu, History } from "lucide-react";
+
+/** Flame / Crescent mark in pure SVG */
+function FlameMark({ className = "size-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      <path
+        d="M12 2C9.5 6 7 9.5 7 13.5C7 16.5 9.2 19 12 19C14.8 19 17 16.5 17 13.5C17 11.2 15.5 8.8 14 7C13.8 9.5 12 11 10.5 11.5C10.8 10 11.8 7.5 12 2Z"
+        fill="currentColor"
+        className="text-flame"
+      />
+      <circle cx="12" cy="14" r="2.5" fill="#6fb6ff" opacity="0.85" />
+    </svg>
+  );
+}
 
 export function Navbar() {
   const pathname = usePathname();
+  const isLanding = pathname === "/";
+  const { user, isAuthenticated, logout } = useAuth();
+  const [open, setOpen] = useState(false);
   const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [isBackendHealthy, setIsBackendHealthy] = useState<boolean | null>(null);
 
   useEffect(() => {
     let mounted = true;
-
-    async function checkHealth() {
+    async function check() {
       try {
         const res = await api.getHealth();
-        if (mounted) {
-          setHealth(res);
-          setIsBackendHealthy(res.status === "healthy");
-        }
+        if (mounted) setHealth(res);
       } catch {
-        if (mounted) {
-          setIsBackendHealthy(false);
-        }
+        if (mounted) setHealth(null);
       }
     }
-
-    checkHealth();
-    const interval = setInterval(checkHealth, 20000);
+    check();
+    const id = setInterval(check, 30000);
     return () => {
       mounted = false;
-      clearInterval(interval);
+      clearInterval(id);
     };
   }, []);
 
-  const navLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: Activity },
-    { href: "/workspace", label: "Workspace", icon: Compass },
-    { href: "/simulations", label: "Simulations", icon: Play },
-    { href: "/assistant", label: "AI Assistant", icon: Cpu },
-    { href: "/history", label: "History", icon: History },
+  const go = (e: MouseEvent<HTMLAnchorElement>, hash: string, then?: () => void) => {
+    if (isLanding && hash.startsWith("#")) {
+      e.preventDefault();
+      then?.();
+      scrollToHash(hash);
+    }
+  };
+
+  const internalLinks = [
+    { href: "/dashboard", label: "OVERVIEW", icon: Activity },
+    { href: "/workspace", label: "WORKSPACE", icon: Compass },
+    { href: "/simulations", label: "SIMULATIONS", icon: Play },
+    { href: "/assistant", label: "AI ANALYZER", icon: Cpu },
+    { href: "/history", label: "HISTORY", icon: History },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-[#080B12]/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-charcoal-700 border border-electric/30 group-hover:border-electric transition-colors shadow-sm shadow-electric/20">
-            <Flame className="h-6 w-6 text-flame animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-mono text-base font-extrabold tracking-wider text-white">
-                NASA<span className="text-flame">FLAME</span>
-              </span>
-              <span className="rounded bg-electric/10 px-1.5 py-0.5 text-[10px] font-mono text-electric-400 border border-electric/20 font-medium">
-                v1.0
-              </span>
-            </div>
-            <p className="text-[11px] font-mono tracking-tight text-slate-400">
-              Flame in Freefall
-            </p>
-          </div>
+    <header className="fixed inset-x-0 top-0 z-50 text-white bg-void/90 backdrop-blur-md border-b border-white/10 transition-colors">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 md:px-[4vw]">
+        {/* Brand identity */}
+        <Link
+          href={isLanding ? "#top" : "/"}
+          onClick={(e) => {
+            if (isLanding) go(e, "#top");
+          }}
+          className="flex items-center gap-2.5 transition-transform hover:opacity-90"
+          aria-label={`${brand.name} — return to top`}
+        >
+          <FlameMark className="size-5" />
+          <span className="font-display text-[0.875rem] tracking-[0.32em] text-white">
+            {brand.wordmark}
+          </span>
+          <span className="hidden sm:inline-block font-mono text-[0.625rem] tracking-[0.18em] text-regolith/50 uppercase ml-1">
+            CIR / ACME
+          </span>
         </Link>
 
-        {/* Primary Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-sm font-medium transition-all ${
-                  isActive
-                    ? "bg-charcoal-700 text-electric-400 border border-electric/30 shadow-sm"
-                    : "text-slate-300 hover:text-white hover:bg-charcoal-800"
-                }`}
-              >
-                <Icon className={`h-4 w-4 ${isActive ? "text-electric-400" : "text-slate-400"}`} />
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Navigation items */}
+        {isLanding ? (
+          <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
+            <a
+              href="#log"
+              onClick={(e) => go(e, "#log")}
+              className="font-mono text-label text-white/75 uppercase transition-colors hover:text-white"
+            >
+              Research Log
+            </a>
+            <a
+              href="#trajectory"
+              onClick={(e) => go(e, "#trajectory")}
+              className="font-mono text-label text-white/75 uppercase transition-colors hover:text-white"
+            >
+              Workflow
+            </a>
+            <a
+              href="#capabilities"
+              onClick={(e) => go(e, "#capabilities")}
+              className="font-mono text-label text-white/75 uppercase transition-colors hover:text-white"
+            >
+              Capabilities
+            </a>
+            <a
+              href="#manifest"
+              onClick={(e) => go(e, "#manifest")}
+              className="font-mono text-label text-white/75 uppercase transition-colors hover:text-white"
+            >
+              Access Window
+            </a>
+            <Link
+              href={isAuthenticated ? "/dashboard" : "/login"}
+              className="rounded-[4px] bg-white px-4 py-2 font-mono text-label text-void uppercase transition-colors hover:bg-earth"
+            >
+              {isAuthenticated && user
+                ? `Console · ${user.name.split(" ")[0]}`
+                : "Enter Mission Control"}
+            </Link>
+          </nav>
+        ) : (
+          <nav aria-label="Application Modules" className="hidden items-center gap-1.5 md:flex">
+            {internalLinks.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(`${item.href}/`));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-[4px] px-3 py-1.5 font-mono text-label uppercase transition-all ${
+                    isActive
+                      ? "bg-white/10 text-earth ring-1 ring-earth/40"
+                      : "text-white/65 hover:bg-white/[0.04] hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
 
-        {/* Right side status & action */}
+        {/* Status indicator and user auth profile */}
         <div className="flex items-center gap-3">
-          {/* Backend Status Indicator */}
-          <div
-            className={`hidden sm:flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-mono border ${
-              isBackendHealthy === true
-                ? "bg-emerald-950/40 text-emerald-400 border-emerald-800/40"
-                : isBackendHealthy === false
-                ? "bg-rose-950/40 text-rose-400 border-rose-800/40"
-                : "bg-charcoal-800 text-slate-400 border-border"
-            }`}
-            title={
-              isBackendHealthy === true
-                ? `FastAPI Backend Online (${health?.environment || "ready"})`
-                : "FastAPI Backend Connection Failed"
-            }
-          >
-            {isBackendHealthy === true ? (
-              <>
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span>API: ONLINE</span>
-              </>
-            ) : isBackendHealthy === false ? (
-              <>
-                <AlertCircle className="h-3 w-3 text-rose-400" />
-                <span>API: OFFLINE</span>
-              </>
-            ) : (
-              <span>CONNECTING...</span>
-            )}
+          {/* Telemetry pill */}
+          <div className="hidden sm:flex items-center gap-2 rounded-[3px] bg-white/[0.03] px-2.5 py-1 ring-1 ring-white/10 font-mono text-[0.625rem] tracking-[0.14em]">
+            <span
+              className={`size-1.5 rounded-full ${
+                health?.status === "healthy"
+                  ? "bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+                  : "bg-amber-400"
+              }`}
+            />
+            <span className="text-regolith/70 uppercase">
+              {health?.status === "healthy" ? "ISS LINK: NOMINAL" : "OFFLINE"}
+            </span>
           </div>
 
-          <Link
-            href="/workspace"
-            className="flex items-center gap-1.5 rounded-lg bg-electric hover:bg-electric-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md shadow-electric/25 transition-colors font-mono"
+          {!isLanding && isAuthenticated && user && (
+            <div className="flex items-center gap-2">
+              <span className="hidden lg:inline-block font-mono text-label text-regolith/80 uppercase">
+                {user.email}
+              </span>
+              <button
+                type="button"
+                onClick={() => logout()}
+                title="Disconnect session"
+                className="flex items-center gap-1 rounded-[4px] bg-white/[0.05] px-2.5 py-1 font-mono text-label text-regolith/80 uppercase ring-1 ring-white/10 transition-colors hover:bg-rose-950/40 hover:text-rose-300 hover:ring-rose-500/40"
+              >
+                <LogOut className="size-3" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
+          )}
+
+          {!isLanding && !isAuthenticated && (
+            <Link
+              href="/login"
+              className="rounded-[4px] bg-earth px-3 py-1.5 font-mono text-label text-void uppercase transition-colors hover:bg-white"
+            >
+              Authenticate
+            </Link>
+          )}
+
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            className="font-mono text-label uppercase md:hidden text-regolith hover:text-white"
           >
-            <Play className="h-3.5 w-3.5 fill-current" />
-            <span>RUN SIM</span>
-          </Link>
+            {open ? "Close" : "Menu"}
+          </button>
         </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      <div
+        id="mobile-menu"
+        inert={!open}
+        className={`fixed inset-0 top-16 -z-10 flex flex-col justify-center gap-6 bg-void/98 px-6 backdrop-blur-2xl transition-opacity md:hidden ${
+          open ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        {isLanding ? (
+          <>
+            <a
+              href="#log"
+              onClick={(e) => go(e, "#log", () => setOpen(false))}
+              className="flex items-baseline gap-4 font-display text-[1.5rem] tracking-[0.14em] uppercase text-white"
+            >
+              <span className="font-mono text-label text-earth">01</span>
+              Research Log
+            </a>
+            <a
+              href="#trajectory"
+              onClick={(e) => go(e, "#trajectory", () => setOpen(false))}
+              className="flex items-baseline gap-4 font-display text-[1.5rem] tracking-[0.14em] uppercase text-white"
+            >
+              <span className="font-mono text-label text-earth">02</span>
+              Workflow
+            </a>
+            <a
+              href="#capabilities"
+              onClick={(e) => go(e, "#capabilities", () => setOpen(false))}
+              className="flex items-baseline gap-4 font-display text-[1.5rem] tracking-[0.14em] uppercase text-white"
+            >
+              <span className="font-mono text-label text-earth">03</span>
+              Capabilities
+            </a>
+            <a
+              href="#manifest"
+              onClick={(e) => go(e, "#manifest", () => setOpen(false))}
+              className="flex items-baseline gap-4 font-display text-[1.5rem] tracking-[0.14em] uppercase text-white"
+            >
+              <span className="font-mono text-label text-earth">04</span>
+              Access Window
+            </a>
+            <Link
+              href={isAuthenticated ? "/dashboard" : "/login"}
+              onClick={() => setOpen(false)}
+              className="mt-4 rounded-[4px] bg-white px-5 py-3 text-center font-mono text-label text-void uppercase transition-colors hover:bg-earth"
+            >
+              {isAuthenticated ? "Enter Mission Control" : "Authenticate & Login"}
+            </Link>
+          </>
+        ) : (
+          <>
+            {internalLinks.map((item, i) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="flex items-baseline gap-4 font-display text-[1.5rem] tracking-[0.14em] uppercase text-white"
+              >
+                <span className="font-mono text-label text-earth">0{i + 1}</span>
+                {item.label}
+              </Link>
+            ))}
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  logout();
+                }}
+                className="mt-6 rounded-[4px] bg-white/[0.08] px-5 py-3 font-mono text-label text-white uppercase ring-1 ring-white/20"
+              >
+                Terminate Session
+              </button>
+            )}
+          </>
+        )}
       </div>
     </header>
   );
 }
-

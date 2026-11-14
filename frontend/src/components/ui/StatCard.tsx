@@ -18,60 +18,44 @@ export function StatCard({
   icon: Icon,
   variant = "electric",
 }: StatCardProps) {
-  const variantStyles = {
-    electric: {
-      border: "border-border hover:border-electric/50",
-      iconBg: "bg-electric-950/50 text-electric-400 border border-electric/30",
-      valueColor: "text-white",
-    },
-    flame: {
-      border: "border-border hover:border-flame/50",
-      iconBg: "bg-flame-950/50 text-flame-400 border border-flame/30",
-      valueColor: "text-white",
-    },
-    emerald: {
-      border: "border-border hover:border-emerald-500/50",
-      iconBg: "bg-emerald-950/50 text-emerald-400 border border-emerald-500/30",
-      valueColor: "text-white",
-    },
-    amber: {
-      border: "border-border hover:border-amber-500/50",
-      iconBg: "bg-amber-950/50 text-amber-400 border border-amber-500/30",
-      valueColor: "text-white",
-    },
-    slate: {
-      border: "border-border hover:border-slate-500/50",
-      iconBg: "bg-charcoal-700 text-slate-300 border border-border",
-      valueColor: "text-white",
-    },
-  };
-
-  const style = variantStyles[variant];
+  const accentColor =
+    variant === "flame"
+      ? "text-flame"
+      : variant === "emerald"
+      ? "text-emerald-400"
+      : variant === "amber"
+      ? "text-amber-400"
+      : "text-earth";
 
   return (
-    <div
-      className={`flex flex-col rounded-xl bg-[#090D16] p-4 border ${style.border} transition-colors shadow-md`}
-    >
+    <div className="group relative flex flex-col rounded-[6px] bg-void-2 p-5 ring-1 ring-white/10 transition-[transform,box-shadow] duration-300 hover:ring-white/20">
       <div className="flex items-center justify-between">
-        <span className="font-mono text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <span className="font-mono text-label text-regolith/60 uppercase tracking-[0.14em]">
           {title}
         </span>
         {Icon && (
-          <div className={`p-1.5 rounded-lg ${style.iconBg}`}>
-            <Icon className="h-4 w-4" />
+          <div className="size-7 flex items-center justify-center rounded-[4px] bg-white/[0.04] ring-1 ring-white/10 text-regolith/80 group-hover:text-white transition-colors">
+            <Icon className="size-3.5" />
           </div>
         )}
       </div>
 
-      <div className="mt-3 flex items-baseline gap-1.5">
-        <span className={`font-mono text-2xl font-bold tracking-tight ${style.valueColor}`}>
+      <div className="mt-4 flex items-baseline gap-2">
+        <span className="font-display text-[2rem] leading-none text-white tracking-wide">
           {value}
         </span>
-        {unit && <span className="font-mono text-xs text-slate-400 font-medium">{unit}</span>}
+        {unit && (
+          <span className={`font-mono text-label ${accentColor} uppercase tracking-[0.14em]`}>
+            {unit}
+          </span>
+        )}
       </div>
 
-      {subtitle && <p className="mt-1 text-xs text-slate-400 leading-tight">{subtitle}</p>}
+      {subtitle && (
+        <p className="mt-2 text-[0.8125rem] text-regolith/60 leading-normal font-sans">
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }
-

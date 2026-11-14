@@ -17,6 +17,33 @@ export type SimulationStatus = "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
 
 export type AnalysisStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  clearance_level: string;
+  station: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+  remember_me?: boolean;
+}
+
+export interface AuthTokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_at: string;
+  user: UserProfile;
+}
+
+export interface LogoutResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface ExperimentMetadata {
   investigator?: string;
   facility?: string;
@@ -159,4 +186,3 @@ export interface HealthResponse {
     engine: string;
   };
 }
-

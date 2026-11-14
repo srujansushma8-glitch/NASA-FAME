@@ -9,66 +9,45 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#080B12",
-        charcoal: {
-          DEFAULT: "#111827",
-          900: "#080B12",
-          800: "#0D131F",
-          700: "#161F30",
-          600: "#1F2B42",
-          500: "#324363",
+        void: {
+          DEFAULT: "#05070c",
+          2: "#0b0f18",
+          3: "#121722",
         },
-        electric: {
-          DEFAULT: "#087CFF",
-          400: "#3A98FF",
-          500: "#087CFF",
-          600: "#0062D6",
-          glow: "rgba(8, 124, 255, 0.15)",
+        regolith: {
+          DEFAULT: "#c9ccd3",
+          light: "#e2e4e9",
+          dim: "#8b909b",
+        },
+        dust: "#8b909b",
+        earth: {
+          DEFAULT: "#6fb6ff",
+          dim: "#4a8fd6",
+          glow: "rgba(111, 182, 255, 0.2)",
         },
         flame: {
-          DEFAULT: "#FF7029",
-          300: "#FFA16B",
-          400: "#FF8747",
-          500: "#FF7029",
-          600: "#E6550E",
-          glow: "rgba(255, 112, 41, 0.18)",
+          DEFAULT: "#ff7029",
+          hot: "#ffaa40",
+          dim: "#d95514",
+          glow: "rgba(255, 112, 41, 0.25)",
         },
-        border: {
-          DEFAULT: "#1E293B",
-          subtle: "#162032",
-          bright: "#2E3F5C",
-        },
+        sunlit: "#f2e6c9",
       },
       fontFamily: {
-        display: [
-          "Michroma",
-          "Space Grotesk",
-          "Inter",
-          "-apple-system",
-          "sans-serif",
-        ],
-        mono: [
-          "JetBrains Mono",
-          "ui-monospace",
-          "SFMono-Regular",
-          "Menlo",
-          "Monaco",
-          "Consolas",
-          "monospace",
-        ],
-        sans: [
-          "Space Grotesk",
-          "Inter",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "sans-serif",
-        ],
+        display: ["Michroma", "Eurostile", "Arial Black", "sans-serif"],
+        sans: ["Manrope", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        mono: ["IBM Plex Mono", "JetBrains Mono", "ui-monospace", "monospace"],
+      },
+      fontSize: {
+        hero: ["clamp(2.25rem, 8.6vw, 9rem)", { lineHeight: "1", letterSpacing: "0.24em" }],
+        display: ["clamp(1.75rem, 4vw, 3.75rem)", { lineHeight: "1.08", letterSpacing: "0.02em" }],
+        lead: ["clamp(1.125rem, 1.6vw, 1.5rem)", { lineHeight: "1.45", letterSpacing: "-0.01em" }],
+        body: ["clamp(0.9375rem, 1.05vw, 1.0625rem)", { lineHeight: "1.65", letterSpacing: "-0.005em" }],
+        label: ["0.6875rem", { lineHeight: "1.3", letterSpacing: "0.16em" }],
       },
     },
   },
   plugins: [],
 };
-export default config;
 
+export default config;
