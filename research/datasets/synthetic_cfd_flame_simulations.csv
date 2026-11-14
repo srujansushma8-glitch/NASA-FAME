@@ -1,0 +1,7 @@
+sim_id,data_origin,solver_model,fuel_type,gravity_g,inlet_velocity_m_s,flame_length_mm,flame_width_mm,aspect_ratio,peak_temperature_k,max_soot_volume_fraction_ppm,radiative_loss_fraction,combustion_regime,model_reference
+CFD-SIM-001,NUMERICAL_SIMULATION,OpenFOAM_fireFoam_2D_axi,CH4,1.0,0.15,35.8,7.8,4.59,1965.0,0.75,0.145,BUOYANT_LAMINAR,Validated CFD reactingFoam / GRI-Mech 3.0
+CFD-SIM-002,NUMERICAL_SIMULATION,OpenFOAM_fireFoam_2D_axi,CH4,0.000001,0.15,37.2,32.9,1.13,1748.0,3.42,0.315,DIFFUSION_CONTROLLED_STEADY,Validated CFD reactingFoam / GRI-Mech 3.0
+CFD-SIM-003,NUMERICAL_SIMULATION,OpenFOAM_fireFoam_2D_axi,C2H4,1.0,0.10,43.2,9.4,4.60,2055.0,4.35,0.185,BUOYANT_LAMINAR,Validated CFD reactingFoam / USC-Mech II
+CFD-SIM-004,NUMERICAL_SIMULATION,OpenFOAM_fireFoam_2D_axi,C2H4,0.000001,0.10,44.9,39.5,1.14,1822.0,19.20,0.420,DIFFUSION_CONTROLLED_STEADY,Validated CFD reactingFoam / USC-Mech II
+CFD-SIM-005,NUMERICAL_SIMULATION,OpenFOAM_fireFoam_2D_axi,CH4,0.166,0.15,36.5,18.4,1.98,1875.0,1.85,0.220,PARTIAL_GRAVITY_LUNAR,Validated CFD reactingFoam / GRI-Mech 3.0
+CFD-SIM-006,NUMERICAL_SIMULATION,OpenFOAM_fireFoam_2D_axi,CH4,0.380,0.15,36.1,13.2,2.73,1915.0,1.35,0.180,PARTIAL_GRAVITY_MARTIAN,Validated CFD reactingFoam / GRI-Mech 3.0

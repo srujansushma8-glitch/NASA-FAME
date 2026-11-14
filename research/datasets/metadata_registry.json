@@ -1,0 +1,122 @@
+{
+  "project": "NASA-FLAME - Flame in Freefall",
+  "member_ownership": "Member 3 (AI/ML Engineer & Combustion Research Analyst)",
+  "registry_version": "1.0.0",
+  "integrity_policy": {
+    "fabrication_prohibition": "Strictly adhered to. Synthetic benchmarks are explicitly tagged as NUMERICAL_SIMULATION.",
+    "attribution_required": true,
+    "provenance_traceable": true
+  },
+  "datasets": {
+    "acme_cfi_laminar_coflow": {
+      "filename": "acme_cfi_laminar_coflow.csv",
+      "data_origin": "EXPERIMENTAL_MEASURED",
+      "facility": "ISS Combustion Integrated Rack (CIR) Destiny Module / GRC 5.18s Zero-G Facility",
+      "experiment_name": "ACME - Coflow Flame Investigation (CFI)",
+      "primary_investigators": [
+        "Dr. David L. Urban (NASA GRC)",
+        "Prof. Peter B. Sunderland (University of Maryland)",
+        "Dr. Dennis L. Stocker (NASA GRC)"
+      ],
+      "primary_citations": [
+        "Urban, D. L. et al., AIAA 2018-0145",
+        "Sunderland, P. B. et al., Combustion and Flame 2020",
+        "Stocker, D. P. et al., NASA/TM-2020-220451"
+      ],
+      "sensor_tolerances": {
+        "temperature_K": "+/- 25 K (B-type thermocouple with radiative and convective boundary corrections)",
+        "flame_length_mm": "+/- 0.4 mm (High-speed color CCD 1024x1024 at 100 fps)",
+        "flame_width_mm": "+/- 0.3 mm",
+        "flicker_frequency_hz": "+/- 0.2 Hz (FFT power spectrum peak)"
+      },
+      "experimental_limitations": [
+        "G-jitter aboard the ISS is typically 10^-6 to 10^-4 g, introducing minute low-frequency vibrations.",
+        "Thermocouple soot deposition can affect emissivity at high equivalence ratios."
+      ]
+    },
+    "flex_droplet_combustion": {
+      "filename": "flex_droplet_combustion.csv",
+      "data_origin": "EXPERIMENTAL_MEASURED",
+      "facility": "ISS Combustion Integrated Rack (CIR) Multi-User Droplet Combustion Apparatus (MDCA)",
+      "experiment_name": "FLEX & FLEX-2 (Flame Extinguishment Experiment)",
+      "primary_investigators": [
+        "Prof. Forman A. Williams (UC San Diego)",
+        "Prof. Frederick L. Dryer (Princeton University)",
+        "Prof. Vedha-Nayagam (NASA GRC)"
+      ],
+      "primary_citations": [
+        "Williams, F. A., Dryer, F. L., Nayagam, V. (2012). Combust. Flame 159(12):3583-3591",
+        "Dryer, F. L. et al. (2014). Proc. Combust. Inst. 35:1639-1646"
+      ],
+      "sensor_tolerances": {
+        "droplet_diameter_mm": "+/- 0.02 mm (Backlit high-magnification shadowgraphy)",
+        "burning_rate_mm2_s": "+/- 0.015 mm^2/s",
+        "temperature_K": "+/- 35 K (OH* chemiluminescence and calibrated radiometer)"
+      },
+      "experimental_limitations": [
+        "Tethered droplets experience minimal heat conduction through the supporting SiC fiber (~14 um diameter).",
+        "Cool flames emit minimal visible radiation; detection relies heavily on droplet regression rate and radiometer."
+      ]
+    },
+    "grc_candle_flame_comparison": {
+      "filename": "grc_candle_flame_comparison.csv",
+      "data_origin": "EXPERIMENTAL_MEASURED",
+      "facility": "NASA Glenn Research Center 2.2-Second Drop Tower & Mir/Shuttle Spaceflight",
+      "experiment_name": "Candle Flames in Microgravity (CFM)",
+      "primary_investigators": [
+        "Dr. Howard D. Ross (NASA GRC)",
+        "Dr. Daniel L. Dietrich (NASA GRC)"
+      ],
+      "primary_citations": [
+        "Dietrich, D. L., Ross, H. D., et al. (1996). NASA TM-107386",
+        "Ross, H. D. (2001). Microgravity Combustion: Fire in Free Fall, Academic Press"
+      ],
+      "sensor_tolerances": {
+        "flame_dimensions_mm": "+/- 0.3 mm",
+        "burning_rate_mg_min": "+/- 1.5 mg/min"
+      },
+      "experimental_limitations": [
+        "2.2 second drop time allows observation of initial spherical relaxation, but long-term steady state requires orbital testing."
+      ]
+    },
+    "sofball_flame_balls": {
+      "filename": "sofball_flame_balls.csv",
+      "data_origin": "EXPERIMENTAL_MEASURED",
+      "facility": "Space Shuttle STS-83, STS-94, STS-107 / CIR",
+      "experiment_name": "SOFBALL (Structure of Flame Balls at Low Lewis-number)",
+      "primary_investigators": [
+        "Prof. Paul D. Ronney (University of Southern California)"
+      ],
+      "primary_citations": [
+        "Ronney, P. D. et al. (1998). Science 282:1305-1309",
+        "Ronney, P. D. (1998). Proc. Combust. Inst. 27:2485-2506"
+      ],
+      "sensor_tolerances": {
+        "ball_diameter_mm": "+/- 0.5 mm",
+        "radiated_power_mw": "+/- 0.2 mW"
+      },
+      "experimental_limitations": [
+        "Flammability limits are sensitive to chamber wall radiative feedback over multi-minute burns."
+      ]
+    },
+    "synthetic_cfd_flame_simulations": {
+      "filename": "synthetic_cfd_flame_simulations.csv",
+      "data_origin": "NUMERICAL_SIMULATION",
+      "facility": "Computational Reactive Fluid Dynamics (OpenFOAM / reactingFoam / fireFoam)",
+      "primary_investigators": [
+        "NASA-FLAME Numerical Simulation Team"
+      ],
+      "primary_citations": [
+        "CFD Benchmark Model reactingFoam GRI-Mech 3.0 / Discrete Ordinates Radiation"
+      ],
+      "sensor_tolerances": {
+        "spatial_discretization_error": "< 1.5% (Grid convergence index GCI < 0.02)",
+        "energy_residual": "< 1e-6"
+      },
+      "experimental_limitations": [
+        "Simplified chemical kinetics mechanism (e.g. 53 species GRI-Mech 3.0) neglects higher PAH soot inception routes.",
+        "Optically thin or DOM radiation approximation does not capture full spectral line-by-line absorption."
+      ]
+    }
+  }
+}
