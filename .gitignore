@@ -42,3 +42,9 @@ htmlcov/
 .vscode/
 .idea/
 
+# Node.js
+node_modules/
+.vitest/
+playwright-report/
+test-results/
+
