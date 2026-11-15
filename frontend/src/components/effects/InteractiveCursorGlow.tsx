@@ -4,11 +4,14 @@ import React, { useEffect, useRef, useState } from "react";
 
 /**
  * InteractiveCursorGlow
- * Renders a soft, electric-blue radial spotlight that smoothly interpolates (lerp)
- * towards the mouse cursor position, providing subtle ambient illumination to the background
- * and updating CSS variables (--mouse-x, --mouse-y) for interactive card highlights.
+ * Renders multiple soft electric-blue light halos that smoothly follow cursor movement
+ * and updates CSS variables (--mouse-x, --mouse-y) for interactive card highlights.
  * 
- * Automatically switches to an ambient breathing effect on mobile/touch devices.
+ * Accurately reproduces the cursor lighting from the reference image:
+ * - Bright blue central spotlight.
+ * - Multiple concentric soft blue light halos.
+ * - Smooth inertial glide physics.
+ * - Graceful ambient fallback on touch/mobile devices.
  */
 export function InteractiveCursorGlow() {
   const spotlightRef = useRef<HTMLDivElement>(null);
@@ -74,7 +77,7 @@ export function InteractiveCursorGlow() {
 
     // Smooth lerp animation loop
     const animate = () => {
-      const ease = 0.09; // Smooth inertial glide
+      const ease = 0.12; // Smooth inertial glide
       currentX += (targetX - currentX) * ease;
       currentY += (targetY - currentY) * ease;
 
@@ -103,7 +106,7 @@ export function InteractiveCursorGlow() {
   if (isTouchDevice || reducedMotion) {
     return (
       <div
-        className="fixed inset-0 pointer-events-none z-[1] overflow-hidden"
+        className="fixed inset-0 pointer-events-none z-[2] overflow-hidden"
         aria-hidden="true"
       >
         <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-cobalt/5 blur-[120px] animate-pulse" />
@@ -117,17 +120,19 @@ export function InteractiveCursorGlow() {
       className="fixed inset-0 pointer-events-none z-[2] overflow-hidden"
       aria-hidden="true"
     >
-      {/* Soft electric-blue radial spotlight */}
+      {/* Multiple concentric soft blue light halos following cursor */}
       <div
         ref={spotlightRef}
-        className="absolute top-0 left-0 w-[750px] h-[750px] rounded-full opacity-0 transition-opacity duration-700 ease-out will-change-transform"
+        className="absolute top-0 left-0 w-[800px] h-[800px] rounded-full opacity-0 transition-opacity duration-500 ease-out will-change-transform"
         style={{
           background: `radial-gradient(
             circle,
-            rgba(43, 75, 255, 0.13) 0%,
-            rgba(56, 189, 248, 0.06) 28%,
-            rgba(43, 75, 255, 0.02) 55%,
-            transparent 72%
+            rgba(56, 189, 248, 0.45) 0%,
+            rgba(56, 189, 248, 0.25) 8%,
+            rgba(37, 99, 235, 0.16) 24%,
+            rgba(29, 78, 216, 0.08) 42%,
+            rgba(30, 64, 175, 0.03) 65%,
+            transparent 75%
           )`,
           mixBlendMode: "screen",
         }}
@@ -135,4 +140,3 @@ export function InteractiveCursorGlow() {
     </div>
   );
 }
-

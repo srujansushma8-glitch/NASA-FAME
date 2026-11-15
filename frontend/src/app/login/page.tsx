@@ -89,9 +89,9 @@ function LoginContent() {
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center py-16 px-4 sm:px-6 md:px-8">
-      {/* Cockpit Atmosphere Radial Backdrop */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[550px] bg-cobalt/10 blur-[140px] pointer-events-none" />
-      <div className="absolute right-1/4 bottom-1/4 w-[400px] h-[400px] bg-flame/10 blur-[120px] pointer-events-none" />
+      {/* Cosmic Nebula Luminous Glow Backdrop */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[550px] bg-cobalt/15 blur-[140px] pointer-events-none" />
+      <div className="absolute right-1/4 bottom-1/4 w-[400px] h-[400px] bg-purple-600/10 blur-[120px] pointer-events-none" />
 
       <div className="relative w-full max-w-md z-10 space-y-6">
         {/* Header & NASA-FLAME Wordmark */}

@@ -3,7 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/auth-context";
-import { PhotorealisticSpaceStationScene } from "@/components/effects/PhotorealisticSpaceStationScene";
+import { CosmicNebulaEnvironment } from "@/components/effects/CosmicNebulaEnvironment";
 import { InteractiveCursorGlow } from "@/components/effects/InteractiveCursorGlow";
 
 export const metadata: Metadata = {
@@ -28,8 +28,8 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-void text-white font-sans antialiased selection:bg-earth/30 selection:text-white overflow-x-hidden relative">
-        {/* Photorealistic 3D Orbital Space Station, Earth, Spacecraft & Lighting */}
-        <PhotorealisticSpaceStationScene />
+        {/* Cosmic Deep-Space Nebula, Dense Twinkling Stars, Planets, Asteroids & Dynamic Meteors */}
+        <CosmicNebulaEnvironment />
         <InteractiveCursorGlow />
 
         <AuthProvider>
