@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { hero } from "@/content";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { clamp, easeOutCubic, lerp, pinProgress, range } from "@/lib/math";
@@ -220,6 +221,22 @@ export function FlameHero() {
         </div>
 
         {/* ========================================================================= */}
+        {/* LAYER 1B: Realistic Earth Horizon & Atmospheric Scattering Limb           */}
+        {/* ========================================================================= */}
+        <div className="absolute inset-x-0 bottom-0 pointer-events-none z-[5] overflow-hidden">
+          <picture>
+            <source media="(max-width: 767px)" srcSet="/layers/m/earth.webp" />
+            <img
+              src="/layers/d/earth.webp"
+              alt="Orbital Earth horizon"
+              aria-hidden="true"
+              className="w-full h-auto max-h-[58vh] object-cover object-bottom opacity-80 mix-blend-screen"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-t from-void via-void/40 to-transparent" />
+        </div>
+
+        {/* ========================================================================= */}
         {/* LAYER 2: Central Dominant Visual Subject — Realistic Spherical 0g Flame   */}
         {/* ========================================================================= */}
         <div
@@ -325,11 +342,11 @@ export function FlameHero() {
         </div>
 
         {/* ========================================================================= */}
-        {/* LAYER 4: Display Typography                                               */}
+        {/* LAYER 4: Display Typography & Action Matrix                               */}
         {/* ========================================================================= */}
         <div
           ref={titleRef}
-          className="pointer-events-none absolute inset-x-0 top-[24%] text-center md:top-[28%] z-20"
+          className="pointer-events-none absolute inset-x-0 top-[20%] text-center md:top-[24%] z-20"
           style={{ opacity: 0 }}
         >
           <div className="space-y-1">
@@ -346,9 +363,31 @@ export function FlameHero() {
               {hero.titleSub}
             </h2>
           </div>
-          <p className="mt-5 font-mono text-label text-regolith/80 uppercase tracking-[0.24em]">
+          <p className="mt-4 font-mono text-label text-regolith/80 uppercase tracking-[0.24em]">
             {hero.kicker}
           </p>
+
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3.5 pointer-events-auto px-4">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 rounded-[4px] bg-white px-5 py-3 font-mono text-label font-bold text-void uppercase transition-all hover:bg-earth shadow-xl hover:shadow-earth/30"
+            >
+              <span>Enter Mission Control</span>
+              <span aria-hidden="true">→</span>
+            </Link>
+            <Link
+              href="/simulations"
+              className="inline-flex items-center gap-2 rounded-[4px] bg-white/[0.08] backdrop-blur-md px-5 py-3 font-mono text-label text-white uppercase ring-1 ring-white/20 transition-all hover:bg-white/[0.15] hover:ring-white/40"
+            >
+              Simulation Lab
+            </Link>
+            <Link
+              href="/workspace"
+              className="hidden sm:inline-flex items-center gap-2 rounded-[4px] bg-white/[0.05] backdrop-blur-md px-4 py-3 font-mono text-label text-earth uppercase ring-1 ring-earth/30 transition-all hover:bg-earth/10"
+            >
+              Experiment Workspace
+            </Link>
+          </div>
         </div>
 
         {/* ========================================================================= */}

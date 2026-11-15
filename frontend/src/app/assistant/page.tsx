@@ -115,10 +115,8 @@ export default function AssistantPage() {
     const userMessage = questionText;
     setUserQuery("");
 
-    // Append user message
     setChatHistory((prev) => [...prev, { sender: "user", text: userMessage }]);
 
-    // Synthesize physical combustion answer grounded in microgravity fluid dynamics
     setTimeout(() => {
       let explanation = "";
       const findings: string[] = [];
@@ -202,41 +200,38 @@ export default function AssistantPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#030508] relative overflow-hidden text-slate-200 py-10 px-4 sm:px-6 lg:px-8">
-        {/* Subtle Cosmic Ambient Glow */}
-        <div className="absolute top-0 left-1/3 w-[800px] h-[500px] bg-gradient-to-b from-cyan-500/10 via-electric-900/5 to-transparent blur-3xl pointer-events-none -z-10" />
-
+      <div className="min-h-screen bg-ink text-stone py-10 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl space-y-8 relative">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-border/60">
             <div>
               <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-electric-950/80 border border-electric-500/40 text-cyan-300 font-mono text-[10px] tracking-widest uppercase">
-                  <Cpu className="h-3 w-3 text-cyan-400" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-cobalt/15 border border-cobalt/40 text-stone-light font-mono text-[10px] tracking-widest uppercase">
+                  <Cpu className="h-3 w-3 text-cobalt" />
                   Neural Combustion Engine
                 </span>
-                <span className="rounded-full bg-white/5 px-2.5 py-1 text-[10px] font-mono text-slate-300 border border-white/10">
+                <span className="rounded bg-ink-surface px-2.5 py-1 text-[10px] font-mono text-stone-dim border border-stone-border/40">
                   Combustion Physics AI v1.0
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-white mt-2 tracking-tight uppercase">
+              <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-stone-light mt-3 tracking-tight uppercase">
                 AI Research Assistant
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl font-sans">
-                Interrogate microgravity combustion kinetics, compute dimensionless fluid dynamic similarity numbers ($Gr, Ri, Fr$), and receive automated scientific recommendations.
+              <p className="text-xs sm:text-sm text-stone mt-1 max-w-2xl font-sans">
+                Interrogate microgravity combustion kinetics, compute dimensionless fluid dynamic similarity numbers (Gr, Ri, Fr), and receive automated scientific recommendations.
               </p>
             </div>
 
             {/* Experiment context selector */}
             <div className="flex items-center gap-3">
-              <span className="text-xs font-mono text-cyan-400 font-semibold uppercase tracking-wider">Context:</span>
+              <span className="text-xs font-mono text-cobalt font-semibold uppercase tracking-wider">Context:</span>
               <select
                 value={selectedExpId}
                 onChange={(e) => setSelectedExpId(e.target.value)}
-                className="rounded-xl bg-white/5 border border-white/10 px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-400 max-w-xs transition-all"
+                className="rounded bg-ink border border-stone-border px-3.5 py-2 text-xs font-mono text-stone-light focus:outline-none focus:border-cobalt max-w-xs transition-all"
               >
                 {experiments.map((exp) => (
-                  <option key={exp.id} value={exp.id} className="bg-[#0b101b] text-white">
+                  <option key={exp.id} value={exp.id} className="bg-ink text-white">
                     {exp.name} ({exp.gravity_level_g.toFixed(2)}g)
                   </option>
                 ))}
@@ -246,77 +241,108 @@ export default function AssistantPage() {
 
           {/* AI Diagnostic Report Banner for Selected Experiment */}
           {analyzing ? (
-            <LoadingSpinner message="Member 3 AI Engine computing dimensionless numbers & regime classification..." />
+            <LoadingSpinner message="AI Engine computing dimensionless numbers & regime classification..." />
           ) : activeAnalysis ? (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl p-6 shadow-2xl space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div className="rounded-lg border border-stone-border bg-ink-surface p-6 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-border/60">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-electric-950 border border-electric-500/40 text-cyan-400">
+                  <div className="flex h-9 w-9 items-center justify-center rounded bg-cobalt/15 border border-cobalt/40 text-cobalt">
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="font-display text-sm font-bold text-white tracking-wide uppercase">
+                    <div className="font-display text-sm font-bold text-stone-light tracking-wide uppercase">
                       AI Diagnostic Report • {selectedExp?.name}
                     </div>
-                    <div className="text-[11px] font-mono text-slate-400">
+                    <div className="text-[11px] font-mono text-stone-dim">
                       Model: {activeAnalysis.ai_model_used || "NASA-FLAME AI Diagnostic Engine"}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 font-mono text-xs">
-                  <span className="rounded-lg bg-emerald-950/60 border border-emerald-500/40 px-3 py-1 text-emerald-300 font-semibold">
+                  <span className="rounded bg-cobalt/15 border border-cobalt/40 px-3 py-1 text-stone-light font-semibold">
                     Confidence: {(activeAnalysis.confidence_score * 100).toFixed(0)}%
                   </span>
-                  <span className="rounded-lg bg-cyan-950/60 border border-cyan-500/40 px-3 py-1 text-cyan-300 font-semibold">
+                  <span className="rounded bg-ink border border-stone-border px-3 py-1 text-stone-light font-semibold">
                     {activeAnalysis.regime_classification}
                   </span>
                 </div>
               </div>
 
               {/* Summary */}
-              <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-xs font-mono text-slate-200 leading-relaxed">
-                <span className="text-cyan-400 font-bold tracking-wider">EXECUTIVE SUMMARY: </span>
+              <div className="p-4 rounded bg-ink border border-stone-border/40 text-xs font-mono text-stone leading-relaxed">
+                <span className="text-cobalt font-bold tracking-wider">EXECUTIVE SUMMARY: </span>
                 {activeAnalysis.summary}
               </div>
 
               {/* Dimensionless Numbers Component */}
-              <DimensionlessGauge
-                numbers={activeAnalysis.dimensionless_numbers}
-                regime={activeAnalysis.regime_classification}
-              />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-cobalt font-bold uppercase tracking-wider">
+                    Exact Fluid Dynamic Similarity Calculations (Deterministic Navier-Stokes)
+                  </span>
+                  <span className="rounded bg-cobalt/10 border border-cobalt/30 px-2 py-0.5 text-[10px] text-stone-light font-mono">
+                    MATHEMATICAL DERIVATION
+                  </span>
+                </div>
+                <DimensionlessGauge
+                  numbers={activeAnalysis.dimensionless_numbers}
+                  regime={activeAnalysis.regime_classification}
+                />
+              </div>
 
-              {/* Findings & Recommendations */}
+              {/* Findings & Recommendations with Strict Scientific Labeling */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                <div className="rounded-xl bg-white/[0.02] border border-white/5 p-5 space-y-3">
-                  <div className="flex items-center gap-2 font-mono text-xs font-bold text-white uppercase tracking-wider">
-                    <Atom className="h-4 w-4 text-cyan-400" />
-                    <span>Physical Findings (Fluid Dynamics)</span>
+                <div className="rounded bg-ink border border-stone-border/40 p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 font-mono text-xs font-bold text-stone-light uppercase tracking-wider">
+                      <Atom className="h-4 w-4 text-cobalt" />
+                      <span>Physical Findings &amp; AI Interpretations</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-cobalt bg-cobalt/10 px-2 py-0.5 rounded">
+                      AI INFERENCE
+                    </span>
                   </div>
-                  <ul className="space-y-2 text-xs text-slate-300 font-mono">
+                  <ul className="space-y-2 text-xs text-stone font-mono">
                     {activeAnalysis.scientific_findings.map((f, i) => (
                       <li key={i} className="flex items-start gap-2.5">
-                        <span className="text-cyan-400 mt-0.5">•</span>
+                        <span className="text-cobalt mt-0.5">•</span>
                         <span className="leading-relaxed font-sans">{f}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="rounded-xl bg-white/[0.02] border border-white/5 p-5 space-y-3">
-                  <div className="flex items-center gap-2 font-mono text-xs font-bold text-white uppercase tracking-wider">
-                    <ShieldCheck className="h-4 w-4 text-flame-400" />
-                    <span>Operational Flight Recommendations</span>
+                <div className="rounded bg-ink border border-stone-border/40 p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 font-mono text-xs font-bold text-stone-light uppercase tracking-wider">
+                      <ShieldCheck className="h-4 w-4 text-flame" />
+                      <span>Safety Considerations &amp; Flight Protocol</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-flame bg-flame/10 px-2 py-0.5 rounded">
+                      SAFETY CRITICAL
+                    </span>
                   </div>
-                  <ul className="space-y-2 text-xs text-slate-300 font-mono">
+                  <ul className="space-y-2 text-xs text-stone font-mono">
                     {activeAnalysis.recommendations.map((r, i) => (
                       <li key={i} className="flex items-start gap-2.5">
-                        <span className="text-flame-400 mt-0.5">•</span>
+                        <span className="text-flame mt-0.5">•</span>
                         <span className="leading-relaxed font-sans">{r}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
+              </div>
+
+              {/* Model Scientific Limitations & Verification Provenance */}
+              <div className="p-4 rounded bg-ink border border-stone-border/40 text-[11px] font-mono text-stone-dim space-y-1">
+                <div className="text-stone-light font-bold uppercase tracking-wider text-[10px] flex items-center gap-1.5">
+                  <AlertCircle className="h-3.5 w-3.5 text-cobalt" />
+                  <span>Scientific Provenance, Assumptions &amp; Model Limitations</span>
+                </div>
+                <p className="font-sans leading-relaxed text-stone">
+                  Calculations assume quasi-steady state spherical diffusion (Burke-Schumann) and optically thin gas radiation models for CO₂ and H₂O. Empirical boundary verifications are grounded in published NASA Glenn 2.2-Second Drop Tower and ISS Combustion Integrated Rack (CIR/ACME) flight data. AI interpretations do not extrapolate beyond verified combustion limits.
+                </p>
               </div>
             </div>
           ) : null}
@@ -325,14 +351,14 @@ export default function AssistantPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Preset Questions Catalog (4 cols) */}
             <div className="lg:col-span-4 space-y-3">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl p-6 shadow-2xl space-y-4">
-                <div className="flex items-center gap-2 pb-3 border-b border-white/10">
-                  <HelpCircle className="h-4 w-4 text-cyan-400" />
-                  <span className="font-mono text-xs font-bold text-cyan-400 uppercase tracking-widest">
+              <div className="rounded-lg border border-stone-border bg-ink-surface p-6 space-y-4">
+                <div className="flex items-center gap-2 pb-3 border-b border-stone-border/60">
+                  <HelpCircle className="h-4 w-4 text-cobalt" />
+                  <span className="font-mono text-xs font-bold text-cobalt uppercase tracking-widest">
                     Scientific Inquiries
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 font-sans leading-relaxed">
+                <p className="text-xs text-stone font-sans leading-relaxed">
                   Select a verified scientific inquiry grounded in microgravity combustion literature:
                 </p>
 
@@ -342,10 +368,10 @@ export default function AssistantPage() {
                       key={idx}
                       type="button"
                       onClick={() => handleAskQuestion(pq.query)}
-                      className="w-full text-left p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-500/40 text-xs font-mono text-slate-300 transition-all group"
+                      className="w-full text-left p-3 rounded bg-ink hover:bg-ink-elevated border border-stone-border hover:border-cobalt text-xs font-mono text-stone transition-all group"
                     >
-                      <div className="font-semibold text-white group-hover:text-cyan-300 transition-colors">{pq.title}</div>
-                      <div className="text-[11px] text-slate-400 line-clamp-2 mt-1 font-sans">{pq.query}</div>
+                      <div className="font-semibold text-stone-light group-hover:text-white transition-colors">{pq.title}</div>
+                      <div className="text-[11px] text-stone-dim line-clamp-2 mt-1 font-sans">{pq.query}</div>
                     </button>
                   ))}
                 </div>
@@ -354,16 +380,16 @@ export default function AssistantPage() {
 
             {/* Interactive Chat Console (8 cols) */}
             <div className="lg:col-span-8 space-y-4">
-              <div className="flex flex-col h-[540px] rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl overflow-hidden">
+              <div className="flex flex-col h-[540px] rounded-lg border border-stone-border bg-ink-surface overflow-hidden">
                 {/* Console Header */}
-                <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-white/5">
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-stone-border/60 bg-ink">
                   <div className="flex items-center gap-2">
-                    <Cpu className="h-4 w-4 text-cyan-400" />
-                    <span className="font-mono text-xs font-bold text-white uppercase tracking-widest">
+                    <Cpu className="h-4 w-4 text-cobalt" />
+                    <span className="font-mono text-xs font-bold text-stone-light uppercase tracking-widest">
                       Scientific Q&amp;A Console
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] text-slate-400">
+                  <span className="font-mono text-[10px] text-stone-dim">
                     Burke-Schumann • Navier-Stokes • d²-law Grounded
                   </span>
                 </div>
@@ -371,12 +397,12 @@ export default function AssistantPage() {
                 {/* Chat Thread */}
                 <div className="flex-1 p-5 overflow-y-auto space-y-4">
                   {chatHistory.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-center p-6 text-slate-500 font-mono text-xs space-y-2">
-                      <Sparkles className="h-8 w-8 text-cyan-500/40 mb-2" />
-                      <div className="text-slate-300 font-display font-semibold uppercase tracking-wider">
+                    <div className="flex flex-col items-center justify-center h-full text-center p-6 text-stone-dim font-mono text-xs space-y-2">
+                      <Sparkles className="h-8 w-8 text-cobalt mb-2" />
+                      <div className="text-stone-light font-display font-semibold uppercase tracking-wider">
                         Ask Any Microgravity Combustion Question
                       </div>
-                      <div className="max-w-md text-slate-500 text-[11px] font-sans">
+                      <div className="max-w-md text-stone text-[11px] font-sans">
                         Type your scientific question below or select a preset inquiry from the catalog.
                       </div>
                     </div>
@@ -389,27 +415,27 @@ export default function AssistantPage() {
                         }`}
                       >
                         <div
-                          className={`max-w-2xl rounded-2xl p-4 text-xs font-mono leading-relaxed ${
+                          className={`max-w-2xl rounded p-4 text-xs font-mono leading-relaxed ${
                             msg.sender === "user"
-                              ? "bg-electric-950/80 text-white border border-cyan-500/40 shadow-lg shadow-cyan-950/30"
-                              : "bg-white/5 text-slate-200 border border-white/10 shadow-lg"
+                              ? "bg-cobalt/20 text-white border border-cobalt/60 shadow-[0_0_15px_rgba(43,75,255,0.25)]"
+                              : "bg-ink text-stone border border-stone-border"
                           }`}
                         >
                           {msg.sender === "assistant" && (
-                            <div className="flex items-center gap-2 text-cyan-400 font-bold mb-2 pb-1.5 border-b border-white/10">
+                            <div className="flex items-center gap-2 text-cobalt font-bold mb-2 pb-1.5 border-b border-stone-border/40">
                               <Sparkles className="h-3.5 w-3.5" />
-                              <span className="tracking-wider uppercase">AI RESEARCH ASSISTANT (MEMBER 3)</span>
+                              <span className="tracking-wider uppercase">AI RESEARCH ASSISTANT</span>
                             </div>
                           )}
-                          <div className="font-sans leading-relaxed">{msg.text}</div>
+                          <div className="font-sans leading-relaxed text-stone-light">{msg.text}</div>
 
                           {msg.findings && msg.findings.length > 0 && (
-                            <div className="mt-3 pt-2.5 border-t border-white/10 space-y-1.5">
-                              <span className="font-bold text-cyan-300 text-[11px] tracking-wider uppercase">
+                            <div className="mt-3 pt-2.5 border-t border-stone-border/40 space-y-1.5">
+                              <span className="font-bold text-cobalt text-[11px] tracking-wider uppercase">
                                 PHYSICAL FINDINGS:
                               </span>
                               {msg.findings.map((f, fi) => (
-                                <div key={fi} className="text-slate-300 text-[11px] font-sans">
+                                <div key={fi} className="text-stone text-[11px] font-sans">
                                   • {f}
                                 </div>
                               ))}
@@ -417,12 +443,12 @@ export default function AssistantPage() {
                           )}
 
                           {msg.recommendations && msg.recommendations.length > 0 && (
-                            <div className="mt-2.5 pt-2 border-t border-white/5 space-y-1.5">
-                              <span className="font-bold text-flame-400 text-[11px] tracking-wider uppercase">
+                            <div className="mt-2.5 pt-2 border-t border-stone-border/40 space-y-1.5">
+                              <span className="font-bold text-flame text-[11px] tracking-wider uppercase">
                                 OPERATIONAL RECOMMENDATIONS:
                               </span>
                               {msg.recommendations.map((r, ri) => (
-                                <div key={ri} className="text-slate-300 text-[11px] font-sans">
+                                <div key={ri} className="text-stone text-[11px] font-sans">
                                   • {r}
                                 </div>
                               ))}
@@ -435,7 +461,7 @@ export default function AssistantPage() {
                 </div>
 
                 {/* Question Input Box */}
-                <div className="p-4 border-t border-white/10 bg-black/40">
+                <div className="p-4 border-t border-stone-border/60 bg-ink">
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -448,12 +474,12 @@ export default function AssistantPage() {
                       value={userQuery}
                       onChange={(e) => setUserQuery(e.target.value)}
                       placeholder="Ask about buoyancy, soot formation, Richardson numbers, extinction..."
-                      className="flex-1 rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-all"
+                      className="flex-1 rounded bg-ink-surface border border-stone-border px-4 py-2.5 text-xs font-mono text-stone-light placeholder-stone-muted focus:outline-none focus:border-cobalt transition-all"
                     />
                     <button
                       type="submit"
                       disabled={!userQuery.trim()}
-                      className="flex items-center gap-2 rounded-xl bg-electric-500 hover:bg-electric-400 disabled:opacity-30 px-5 py-2.5 text-xs font-mono font-semibold text-white shadow-lg shadow-electric-500/25 transition-all"
+                      className="flex items-center gap-2 rounded bg-cobalt hover:bg-cobalt-hover disabled:opacity-30 px-5 py-2.5 text-xs font-mono font-semibold text-white shadow-[0_0_15px_rgba(43,75,255,0.35)] transition-all"
                     >
                       <Send className="h-3.5 w-3.5" />
                       <span>Ask</span>

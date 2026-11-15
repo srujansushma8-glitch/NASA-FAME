@@ -17,25 +17,29 @@ html.lenis body {
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    background: #05070c;
+    background: #0C0C0D;
+    color-scheme: dark;
+    scroll-behavior: smooth;
   }
   body {
     margin: 0;
-    background: #05070c;
-    color: #c9ccd3;
-    font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0C0C0D;
+    color: #CFC9BF;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
+    selection-background-color: #2B4BFF;
+    selection-color: #0C0C0D;
   }
   ::selection {
-    background: #6fb6ff;
-    color: #05070c;
+    background: #2B4BFF;
+    color: #FFFFFF;
   }
   :focus-visible {
-    outline: 1.5px solid #6fb6ff;
+    outline: 1.5px solid #2B4BFF;
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 }
 
@@ -44,26 +48,67 @@ html.lenis body {
     height: 100svh;
   }
 
-  /* HUD corner brackets */
+  /* MONOLITH Editorial Technical Grid Background */
+  .monolith-grid {
+    background-image: 
+      linear-gradient(to right, rgba(207, 201, 191, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(207, 201, 191, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .monolith-grid-dense {
+    background-image: 
+      linear-gradient(to right, rgba(207, 201, 191, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(207, 201, 191, 0.035) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* HUD corner brackets with refined 1px lines */
   .brackets {
     background:
-      linear-gradient(currentColor, currentColor) top left / 14px 1px,
-      linear-gradient(currentColor, currentColor) top left / 1px 14px,
-      linear-gradient(currentColor, currentColor) top right / 14px 1px,
-      linear-gradient(currentColor, currentColor) top right / 1px 14px,
-      linear-gradient(currentColor, currentColor) bottom left / 14px 1px,
-      linear-gradient(currentColor, currentColor) bottom left / 1px 14px,
-      linear-gradient(currentColor, currentColor) bottom right / 14px 1px,
-      linear-gradient(currentColor, currentColor) bottom right / 1px 14px;
+      linear-gradient(currentColor, currentColor) top left / 10px 1px,
+      linear-gradient(currentColor, currentColor) top left / 1px 10px,
+      linear-gradient(currentColor, currentColor) top right / 10px 1px,
+      linear-gradient(currentColor, currentColor) top right / 1px 10px,
+      linear-gradient(currentColor, currentColor) bottom left / 10px 1px,
+      linear-gradient(currentColor, currentColor) bottom left / 1px 10px,
+      linear-gradient(currentColor, currentColor) bottom right / 10px 1px,
+      linear-gradient(currentColor, currentColor) bottom right / 1px 10px;
     background-repeat: no-repeat;
+  }
+
+  .brackets-sm {
+    background:
+      linear-gradient(currentColor, currentColor) top left / 6px 1px,
+      linear-gradient(currentColor, currentColor) top left / 1px 6px,
+      linear-gradient(currentColor, currentColor) top right / 6px 1px,
+      linear-gradient(currentColor, currentColor) top right / 1px 6px,
+      linear-gradient(currentColor, currentColor) bottom left / 6px 1px,
+      linear-gradient(currentColor, currentColor) bottom left / 1px 6px,
+      linear-gradient(currentColor, currentColor) bottom right / 6px 1px,
+      linear-gradient(currentColor, currentColor) bottom right / 1px 6px;
+    background-repeat: no-repeat;
+  }
+
+  /* Glowing cobalt accent lines */
+  .glow-cobalt {
+    box-shadow: 0 0 35px -5px rgba(43, 75, 255, 0.45);
+  }
+
+  .glow-cobalt-subtle {
+    box-shadow: 0 0 20px -2px rgba(43, 75, 255, 0.2);
+  }
+
+  .glow-flame-core {
+    box-shadow: 0 0 45px -2px rgba(255, 122, 41, 0.35);
   }
 
   [data-reveal] {
     opacity: 0;
-    transform: translate3d(0, 24px, 0);
+    transform: translate3d(0, 20px, 0);
     transition:
-      opacity 1s cubic-bezier(0.2, 0.7, 0.1, 1),
-      transform 1s cubic-bezier(0.2, 0.7, 0.1, 1);
+      opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
   [data-reveal].is-in {
     opacity: 1;
@@ -76,25 +121,18 @@ html.lenis body {
   }
 }
 
-@keyframes leg-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 12px, 0);
-  }
-}
-
 /* Custom subtle dark scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #05070c;
+  background: #0C0C0D;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 3px;
+  background: #222228;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #2B4BFF;
 }
