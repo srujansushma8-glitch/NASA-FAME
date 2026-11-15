@@ -68,7 +68,7 @@ export function MissionControlCTA() {
 
           <div className="pt-4 flex justify-center">
             <Link
-              href="/dashboard"
+              href="/login?redirect=/dashboard"
               className="px-8 py-4 rounded bg-cobalt hover:bg-cobalt-hover text-white font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 shadow-[0_0_35px_rgba(43,75,255,0.45)] hover:shadow-[0_0_55px_rgba(43,75,255,0.75)] hover:scale-[1.025] active:scale-[0.98] flex items-center gap-3"
             >
               <Activity className="size-4" />

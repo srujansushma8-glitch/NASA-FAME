@@ -294,7 +294,7 @@ function WorkspaceContent() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-ink text-stone py-10 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-transparent text-stone py-10 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mx-auto max-w-7xl space-y-8 relative">
           {/* Workspace Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-border/60">

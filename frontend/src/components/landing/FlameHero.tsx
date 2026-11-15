@@ -369,7 +369,7 @@ export function FlameHero() {
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3.5 pointer-events-auto px-4">
             <Link
-              href="/dashboard"
+              href="/login"
               className="inline-flex items-center gap-2 rounded-[4px] bg-white px-5 py-3 font-mono text-label font-bold text-void uppercase transition-all hover:bg-earth shadow-xl hover:shadow-earth/30"
             >
               <span>Enter Mission Control</span>

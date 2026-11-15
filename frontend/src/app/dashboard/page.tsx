@@ -144,7 +144,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-ink text-stone py-10 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-transparent text-stone py-10 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mx-auto max-w-7xl space-y-8 relative">
           {/* Top Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-border/60">
@@ -194,8 +194,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Real-time Telemetry HUD Panel */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 p-4 rounded-lg bg-ink-surface border border-stone-border/70 font-mono text-xs">
-            <div className="p-3 rounded bg-ink border border-stone-border/40">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 p-4 rounded-xl bg-ink-surface/80 backdrop-blur-xl border border-stone-border/40 font-mono text-xs shadow-xl">
+            <div className="p-3 rounded-lg bg-ink/75 border border-stone-border/30">
               <div className="flex items-center gap-1.5 text-stone-muted text-[10px] uppercase">
                 <Orbit className="h-3 w-3 text-cobalt" />
                 <span>ISS Freefall (0g)</span>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
               <div className="text-[10px] text-cobalt mt-0.5">NOMINAL DRIFT</div>
             </div>
 
-            <div className="p-3 rounded bg-ink border border-stone-border/40">
+            <div className="p-3 rounded-lg bg-ink/75 border border-stone-border/30">
               <div className="flex items-center gap-1.5 text-stone-muted text-[10px] uppercase">
                 <Thermometer className="h-3 w-3 text-flame" />
                 <span>Chamber Temp</span>
@@ -213,7 +213,7 @@ export default function DashboardPage() {
               <div className="text-[10px] text-stone-muted mt-0.5">ISOTHERMAL BASE</div>
             </div>
 
-            <div className="p-3 rounded bg-ink border border-stone-border/40">
+            <div className="p-3 rounded-lg bg-ink/75 border border-stone-border/30">
               <div className="flex items-center gap-1.5 text-stone-muted text-[10px] uppercase">
                 <Gauge className="h-3 w-3 text-cobalt" />
                 <span>Pressure</span>
@@ -222,7 +222,7 @@ export default function DashboardPage() {
               <div className="text-[10px] text-stone-dim mt-0.5">REGULATED SEAL</div>
             </div>
 
-            <div className="p-3 rounded bg-ink border border-stone-border/40">
+            <div className="p-3 rounded-lg bg-ink/75 border border-stone-border/30">
               <div className="flex items-center gap-1.5 text-stone-muted text-[10px] uppercase">
                 <Wind className="h-3 w-3 text-stone" />
                 <span>Oxygen Level</span>
@@ -231,7 +231,7 @@ export default function DashboardPage() {
               <div className="text-[10px] text-stone-muted mt-0.5">79% N₂ BALANCE</div>
             </div>
 
-            <div className="p-3 rounded bg-ink border border-stone-border/40">
+            <div className="p-3 rounded-lg bg-ink/75 border border-stone-border/30">
               <div className="flex items-center gap-1.5 text-stone-muted text-[10px] uppercase">
                 <Radio className="h-3 w-3 text-cobalt" />
                 <span>ISS Orbital Alt</span>
@@ -240,7 +240,7 @@ export default function DashboardPage() {
               <div className="text-[10px] text-stone-muted mt-0.5">INC 51.6°</div>
             </div>
 
-            <div className="p-3 rounded bg-ink border border-stone-border/40">
+            <div className="p-3 rounded-lg bg-ink/75 border border-stone-border/30">
               <div className="flex items-center gap-1.5 text-stone-muted text-[10px] uppercase">
                 <Activity className="h-3 w-3 text-cobalt" />
                 <span>Station Clock</span>
@@ -295,7 +295,7 @@ export default function DashboardPage() {
           {/* Telemetry Charts & Latest Simulation Results */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Real-time Telemetry Trend Chart (7 cols) */}
-            <div className="lg:col-span-7 flex flex-col rounded-lg border border-stone-border bg-ink-surface p-6 space-y-4">
+            <div className="lg:col-span-7 flex flex-col rounded-xl border border-stone-border/40 bg-ink-surface/80 backdrop-blur-xl p-6 space-y-4 shadow-[0_4px_30px_rgba(0,0,0,0.6)] hover:border-cobalt/50 transition-all">
               <div className="flex items-center justify-between pb-3 border-b border-stone-border/60">
                 <div>
                   <div className="flex items-center gap-2">
@@ -414,7 +414,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Latest Simulation Result & Morphology (5 cols) */}
-            <div className="lg:col-span-5 flex flex-col justify-between rounded-lg border border-stone-border bg-ink-surface p-6 space-y-4">
+            <div className="lg:col-span-5 flex flex-col justify-between rounded-xl border border-stone-border/40 bg-ink-surface/80 backdrop-blur-xl p-6 space-y-4 shadow-[0_4px_30px_rgba(0,0,0,0.6)] hover:border-cobalt/50 transition-all">
               <div className="flex items-center justify-between pb-3 border-b border-stone-border/60">
                 <div className="flex items-center gap-2">
                   <Box className="h-4 w-4 text-cobalt" />
@@ -493,7 +493,7 @@ export default function DashboardPage() {
 
           {/* Gravitational Regime Selector Arena */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-7 flex flex-col rounded-lg border border-stone-border bg-ink-surface p-6 relative">
+            <div className="lg:col-span-7 flex flex-col rounded-xl border border-stone-border/40 bg-ink-surface/80 backdrop-blur-xl p-6 relative shadow-[0_4px_30px_rgba(0,0,0,0.6)] hover:border-cobalt/50 transition-all">
               <div className="flex items-center justify-between pb-4 border-b border-stone-border/60 mb-4">
                 <div>
                   <span className="font-mono text-xs font-bold text-cobalt uppercase tracking-widest">

@@ -28,7 +28,7 @@ export function StatCard({
       : "text-earth";
 
   return (
-    <div className="group relative flex flex-col rounded-[6px] bg-void-2 p-5 ring-1 ring-white/10 transition-[transform,box-shadow] duration-300 hover:ring-white/20">
+    <div className="group relative flex flex-col rounded-xl bg-ink-surface/80 backdrop-blur-xl border border-stone-border/40 hover:border-cobalt/60 p-5 shadow-[0_4px_25px_rgba(0,0,0,0.5)] hover:shadow-[0_4px_30px_rgba(43,75,255,0.18)] hover:-translate-y-0.5 transition-all duration-300">
       <div className="flex items-center justify-between">
         <span className="font-mono text-label text-regolith/60 uppercase tracking-[0.14em]">
           {title}
