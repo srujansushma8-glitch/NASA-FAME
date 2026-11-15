@@ -3,7 +3,8 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/auth-context";
-import { GlobalSpaceEnvironment } from "@/components/effects/GlobalSpaceEnvironment";
+import { PhotorealisticSpaceStationScene } from "@/components/effects/PhotorealisticSpaceStationScene";
+import { InteractiveCursorGlow } from "@/components/effects/InteractiveCursorGlow";
 
 export const metadata: Metadata = {
   title: "NASA-FLAME • Flame in Freefall | Scientific Research Platform",
@@ -27,8 +28,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-void text-white font-sans antialiased selection:bg-earth/30 selection:text-white overflow-x-hidden relative">
-        {/* Global Persistent Multilayer Space Environment & Interactive Cursor Spotlight */}
-        <GlobalSpaceEnvironment />
+        {/* Photorealistic 3D Orbital Space Station, Earth, Spacecraft & Lighting */}
+        <PhotorealisticSpaceStationScene />
+        <InteractiveCursorGlow />
 
         <AuthProvider>
           <Navbar />

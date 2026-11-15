@@ -1,8 +1,8 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Flame,
   ShieldCheck,
@@ -23,8 +23,15 @@ import { LoadingSpinner } from "@/components/ui/EmptyState";
 function LoginContent() {
   const { user, login, logout, isAuthenticated } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectTarget = searchParams.get("redirect") || "/dashboard";
+  const [redirectTarget, setRedirectTarget] = useState("/dashboard");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get("redirect");
+      if (target) setRedirectTarget(target);
+    }
+  }, []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -179,14 +186,14 @@ function LoginContent() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email Address */}
+              {/* Username / Email Address */}
               <div>
                 <label className="mb-1.5 block font-mono text-xs text-stone-dim uppercase tracking-wider">
-                  Investigator Email
+                  Username / Investigator Email
                 </label>
                 <div className="relative">
                   <input
-                    type="email"
+                    type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="commander@nasa-flame.gov"
@@ -201,7 +208,7 @@ function LoginContent() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="font-mono text-xs text-stone-dim uppercase tracking-wider">
-                    Operational Access Key
+                    Password
                   </label>
                   <button
                     type="button"
@@ -225,7 +232,7 @@ function LoginContent() {
                 </div>
               </div>
 
-              {/* Remember Me */}
+              {/* Remember Me & Forgot Password */}
               <div className="flex items-center justify-between pt-1">
                 <label className="flex items-center gap-2 cursor-pointer font-mono text-xs text-stone-dim">
                   <input
@@ -234,11 +241,23 @@ function LoginContent() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="size-3.5 rounded bg-ink border-stone-border accent-[#2B4BFF]"
                   />
-                  <span>Maintain session token (72h)</span>
+                  <span>Remember me</span>
                 </label>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    alert(
+                      "Cryptographic Clearance Recovery: Contact NASA CIR Flight Communications at mission-control@nasa-flame.gov or use Pre-Configured Flight Clearances below."
+                    )
+                  }
+                  className="font-mono text-[11px] text-stone-dim hover:text-cobalt transition-colors"
+                >
+                  Forgot password?
+                </button>
               </div>
 
-              {/* Submit Button */}
+              {/* SIGN IN Button */}
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -247,15 +266,31 @@ function LoginContent() {
                 {isSubmitting ? (
                   <>
                     <span className="size-3.5 rounded-full border border-white border-t-transparent animate-spin" />
-                    <span>Validating Clearance...</span>
+                    <span>AUTHENTICATING CLEARANCE...</span>
                   </>
                 ) : (
                   <>
                     <ShieldCheck className="size-4" />
-                    <span>Authenticate &amp; Enter Console</span>
+                    <span>SIGN IN</span>
                   </>
                 )}
               </button>
+
+              {/* Registration Option */}
+              <div className="text-center pt-1 font-mono text-xs text-stone-dim">
+                <span>New Investigator? </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    alert(
+                      "Research Station Registration: Select any pre-configured institutional clearance below to immediately initialize an accredited research session."
+                    )
+                  }
+                  className="text-cobalt hover:underline font-semibold"
+                >
+                  Request Clearance / Register
+                </button>
+              </div>
             </form>
 
             {/* Institutional Clearances & 1-Click Demo */}
@@ -306,15 +341,5 @@ function LoginContent() {
 }
 
 export default function LoginPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-[80vh] flex items-center justify-center font-mono text-xs text-stone-dim uppercase">
-          <LoadingSpinner message="Accessing Flight Clearance Gateway..." />
-        </div>
-      }
-    >
-      <LoginContent />
-    </Suspense>
-  );
+  return <LoginContent />;
 }
