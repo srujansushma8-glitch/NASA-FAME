@@ -18,3 +18,4 @@ services:
         value: sqlite:///./nasa_flame.db
       - key: CORS_ORIGINS
         value: "https://*.vercel.app,http://localhost:3000,http://127.0.0.1:3000,*"
+
