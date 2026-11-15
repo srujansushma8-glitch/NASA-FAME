@@ -1,21 +1,27 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { scienceProblem } from "@/content";
 import { AlertTriangle, Compass, ShieldAlert, ArrowUpRight } from "lucide-react";
 
 export function ScienceProblemSection() {
   return (
-    <section id="science" className="relative py-28 bg-ink border-t border-stone-border/40 overflow-hidden">
+    <section id="science" className="relative py-28 bg-ink/30 border-t border-stone-border/40 overflow-hidden">
       {/* Editorial background grid & markings */}
-      <div className="absolute inset-0 monolith-grid pointer-events-none opacity-60" />
       <div className="absolute right-12 top-10 font-mono text-label text-stone-muted/40 uppercase hidden lg:block">
         REF: ARCHIMEDES-COLLAPSE // SECT-01
       </div>
 
       <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
         {/* Section Header */}
-        <div className="max-w-3xl space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-3xl space-y-4"
+        >
           <div className="flex items-center gap-3">
             <span className="font-mono text-xs text-cobalt font-bold tracking-widest">
               // {scienceProblem.sectionNumber}
@@ -32,14 +38,23 @@ export function ScienceProblemSection() {
           <p className="font-sans text-lead text-stone leading-relaxed">
             {scienceProblem.lead}
           </p>
-        </div>
+        </motion.div>
 
         {/* 3 Technical Breakdown Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-16">
           {scienceProblem.cards.map((card, idx) => (
-            <div
+            <motion.div
               key={card.code}
-              className="relative p-7 rounded-lg bg-ink-surface border border-stone-border/60 hover:border-cobalt/60 transition-all duration-300 flex flex-col justify-between group space-y-6"
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{
+                duration: 0.75,
+                delay: idx * 0.12,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              whileHover={{ y: -4 }}
+              className="relative p-7 rounded-lg bg-ink-surface/90 border border-stone-border/60 hover:border-cobalt/60 hover:shadow-[0_0_25px_rgba(43,75,255,0.18)] transition-all duration-300 flex flex-col justify-between group space-y-6"
             >
               {/* Card Header */}
               <div className="space-y-4">
@@ -68,12 +83,18 @@ export function ScienceProblemSection() {
                   {card.effect}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Physics Comparison Callout Bar */}
-        <div className="mt-12 p-6 rounded-lg bg-ink-elevated border border-stone-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-12 p-6 rounded-lg bg-ink-elevated/80 border border-stone-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-cobalt/40 transition-colors"
+        >
           <div className="space-y-1">
             <div className="font-mono text-xs text-cobalt uppercase tracking-wider font-semibold">
               CRITICAL FORMULATION: THE BURKE-SCHUMANN DIFFUSION REGIME
@@ -87,12 +108,11 @@ export function ScienceProblemSection() {
           </div>
 
           <div className="shrink-0 flex items-center gap-3 font-mono text-xs text-stone-dim">
-            <span className="size-2 rounded-full bg-cobalt" />
+            <span className="size-2 rounded-full bg-cobalt shadow-[0_0_8px_#2B4BFF]" />
             <span>FICKIAN DIFFUSION ONLY</span>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
-

@@ -73,14 +73,17 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
+                className={`relative rounded px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2 group ${
                   isActive
-                    ? "bg-cobalt/15 text-white border border-cobalt/60 shadow-[0_0_12px_rgba(43,75,255,0.25)]"
-                    : "text-stone hover:bg-stone/10 hover:text-white"
+                    ? "bg-cobalt/15 text-white border border-cobalt/70 shadow-[0_0_16px_rgba(43,75,255,0.35)]"
+                    : "text-stone hover:bg-stone/10 hover:text-white hover:border-cobalt/40 border border-transparent hover:shadow-[0_0_12px_rgba(43,75,255,0.18)]"
                 }`}
               >
-                <Icon className={`size-3.5 ${isActive ? "text-cobalt" : "text-stone-dim"}`} />
+                <Icon className={`size-3.5 transition-colors ${isActive ? "text-cobalt" : "text-stone-dim group-hover:text-cobalt"}`} />
                 <span>{item.label}</span>
+                {isActive && (
+                  <span className="absolute bottom-[-1px] left-3 right-3 h-[2px] bg-cobalt rounded-full shadow-[0_0_8px_#2B4BFF]" />
+                )}
               </Link>
             );
           })}

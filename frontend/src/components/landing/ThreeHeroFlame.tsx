@@ -36,9 +36,9 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     // 1. Scene & Camera Setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 18);
+    camera.position.set(0, 0, 18.5);
 
-    // 2. Renderer with High Dynamic Range & Transparent Background
+    // 2. High-Performance Renderer with ACES Tone Mapping
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -47,15 +47,14 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.3;
     container.appendChild(renderer.domElement);
 
-    // Main flame pivot group
+    // Main flame pivot group with floating animation
     const flameGroup = new THREE.Group();
     scene.add(flameGroup);
 
     // 3. Custom GLSL Shader for Volumetric Spherical Microgravity Flame
-    // Vertex Shader: Simplex noise distortion for living plasma surface
     const flameVertexShader = `
       uniform float uTime;
       uniform float uNoiseScale;
@@ -118,7 +117,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
         vNormal = normalize(normalMatrix * normal);
         vPosition = position;
         
-        // Animated multi-octave fluidic pulsation
+        // Animated multi-octave fluidic pulsation in zero gravity
         float noise1 = snoise(position * uNoiseScale + vec3(0.0, uTime * 0.45, 0.0));
         float noise2 = snoise(position * (uNoiseScale * 2.2) - vec3(uTime * 0.35, 0.0, uTime * 0.25)) * 0.5;
         float totalNoise = noise1 + noise2;
@@ -139,7 +138,6 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       varying float vNoise;
 
       void main() {
-        // View ray alignment for volumetric rim effect
         vec3 viewDir = normalize(-vPosition);
         float fresnel = 1.0 - max(dot(viewDir, vNormal), 0.0);
         fresnel = pow(fresnel, 2.2);
@@ -153,7 +151,43 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       }
     `;
 
-    // 4. Layer 1: Outer Translucent Blue Quiescent Diffusion Sheath
+    // 4. Glowing Blue Atmospheric Outer Layer (Rayleigh Halo Glow)
+    const atmosphericHaloGeo = new THREE.SphereGeometry(6.3, 36, 36);
+    const atmosphericHaloMat = new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        void main() {
+          vec3 viewDir = normalize(-vPosition);
+          float fresnel = 1.0 - max(dot(viewDir, vNormal), 0.0);
+          float halo = pow(fresnel, 2.6);
+          
+          // Outer Rayleigh blue spaceflight glow
+          vec3 deepCobalt = vec3(0.12, 0.25, 0.95);
+          vec3 cyanAtmosphere = vec3(0.24, 0.72, 1.0);
+          vec3 color = mix(deepCobalt, cyanAtmosphere, fresnel * 0.7);
+
+          gl_FragColor = vec4(color, clamp(halo * 0.65, 0.0, 0.85));
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide, // BackSide for deep volumetric shell effect
+      depthWrite: false,
+    });
+    const atmosphericHaloMesh = new THREE.Mesh(atmosphericHaloGeo, atmosphericHaloMat);
+    flameGroup.add(atmosphericHaloMesh);
+
+    // 5. Layer 1: Outer Translucent Blue Quiescent Diffusion Sheath
     const outerGeo = new THREE.IcosahedronGeometry(5.2, 32);
     const outerMat = new THREE.ShaderMaterial({
       vertexShader: flameVertexShader,
@@ -173,7 +207,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     const outerMesh = new THREE.Mesh(outerGeo, outerMat);
     flameGroup.add(outerMesh);
 
-    // 5. Layer 2: Intermediate High-Excitation CH* Radical Zone
+    // 6. Layer 2: Intermediate High-Excitation CH* Radical Zone
     const midGeo = new THREE.IcosahedronGeometry(4.3, 32);
     const midMat = new THREE.ShaderMaterial({
       vertexShader: flameVertexShader,
@@ -193,8 +227,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     const midMesh = new THREE.Mesh(midGeo, midMat);
     flameGroup.add(midMesh);
 
-    // 6. Layer 3: Inner Thermal Combustion Core (Warm Amber/Orange subtle illumination)
-    // In accordance with instructions: Warm amber ONLY as subtle scientific core illumination
+    // 7. Layer 3: Inner Thermal Combustion Core (Warm Amber/Orange subtle core)
     const coreGeo = new THREE.SphereGeometry(2.4, 32, 32);
     const coreMat = new THREE.ShaderMaterial({
       vertexShader: flameVertexShader,
@@ -208,7 +241,6 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
           vec3 viewDir = normalize(-vPosition);
           float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);
           
-          // Subtle warm amber core: #FF7A29 fading quickly to golden amber #FFAA40
           vec3 amberDeep = vec3(1.0, 0.478, 0.161);
           vec3 amberGlow = vec3(1.0, 0.72, 0.25);
           
@@ -231,74 +263,115 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
     flameGroup.add(coreMesh);
 
-    // 7. Layer 4: Floating Microgravity Particulate Motes (Soot Nanoparticles in 0g)
-    const particleCount = 180;
-    const particleGeo = new THREE.BufferGeometry();
-    const particlePositions = new Float32Array(particleCount * 3);
-    const particleVelocities = new Float32Array(particleCount * 3);
-    const particleScales = new Float32Array(particleCount);
+    // 8. Layer 4: Orbiting Particles with Fading Motion Trails
+    const orbitCount = 42;
+    const trailSegments = 8;
+    const totalTrailPoints = orbitCount * trailSegments;
 
-    for (let i = 0; i < particleCount; i++) {
-      // Isotropic spherical dispersion
-      const u = Math.random();
-      const v = Math.random();
-      const theta = u * 2.0 * Math.PI;
-      const phi = Math.acos(2.0 * v - 1.0);
-      const r = 4.8 + Math.random() * 4.2;
+    const trailGeo = new THREE.BufferGeometry();
+    const trailPositions = new Float32Array(totalTrailPoints * 3);
+    const trailAlphas = new Float32Array(totalTrailPoints);
 
-      particlePositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      particlePositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      particlePositions[i * 3 + 2] = r * Math.cos(phi);
-
-      // Microscopic isotropic drift in zero gravity
-      particleVelocities[i * 3] = (Math.random() - 0.5) * 0.006;
-      particleVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.006;
-      particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.006;
-
-      particleScales[i] = Math.random() * 0.08 + 0.04;
+    // Setup orbit parameters
+    interface OrbitBody {
+      radius: number;
+      speed: number;
+      inclination: number;
+      azimuth: number;
+      phase: number;
+      history: THREE.Vector3[];
     }
 
-    particleGeo.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+    const orbits: OrbitBody[] = [];
+    for (let i = 0; i < orbitCount; i++) {
+      const radius = 5.6 + (i / orbitCount) * 3.6;
+      const speed = (0.012 + Math.random() * 0.018) * (Math.random() < 0.5 ? 1 : -1);
+      const inclination = (Math.random() - 0.5) * Math.PI * 0.85;
+      const azimuth = Math.random() * Math.PI * 2;
+      const phase = Math.random() * Math.PI * 2;
 
-    // Create particle circular canvas texture
+      const history: THREE.Vector3[] = [];
+      for (let s = 0; s < trailSegments; s++) {
+        history.push(new THREE.Vector3(0, 0, 0));
+      }
+
+      orbits.push({ radius, speed, inclination, azimuth, phase, history });
+    }
+
+    trailGeo.setAttribute("position", new THREE.BufferAttribute(trailPositions, 3));
+
+    // Particle texture
     const particleCanvas = document.createElement("canvas");
     particleCanvas.width = 32;
     particleCanvas.height = 32;
     const pCtx = particleCanvas.getContext("2d");
     if (pCtx) {
       const grad = pCtx.createRadialGradient(16, 16, 0, 16, 16, 16);
-      grad.addColorStop(0, "rgba(110, 160, 255, 1.0)");
-      grad.addColorStop(0.4, "rgba(43, 75, 255, 0.6)");
+      grad.addColorStop(0, "rgba(180, 225, 255, 1.0)");
+      grad.addColorStop(0.35, "rgba(67, 120, 255, 0.75)");
       grad.addColorStop(1, "rgba(43, 75, 255, 0)");
       pCtx.fillStyle = grad;
       pCtx.fillRect(0, 0, 32, 32);
     }
     const particleTexture = new THREE.CanvasTexture(particleCanvas);
 
-    const particleMat = new THREE.PointsMaterial({
-      size: 0.35,
+    const orbitMat = new THREE.PointsMaterial({
+      size: 0.38,
       map: particleTexture,
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
-    const particleSystem = new THREE.Points(particleGeo, particleMat);
-    flameGroup.add(particleSystem);
+    const orbitPoints = new THREE.Points(trailGeo, orbitMat);
+    flameGroup.add(orbitPoints);
 
-    // 8. Atmospheric Instrumentation & Orbital Rings (Fine thin telemetry guides)
+    // 9. Floating Microgravity Particulate Motes (Soot Nanoparticles in 0g)
+    const particleCount = 140;
+    const particleGeo = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+    const particleVelocities = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount; i++) {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = u * 2.0 * Math.PI;
+      const phi = Math.acos(2.0 * v - 1.0);
+      const r = 4.6 + Math.random() * 4.4;
+
+      particlePositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      particlePositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      particlePositions[i * 3 + 2] = r * Math.cos(phi);
+
+      particleVelocities[i * 3] = (Math.random() - 0.5) * 0.005;
+      particleVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.005;
+      particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.005;
+    }
+
+    particleGeo.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+    const sootMat = new THREE.PointsMaterial({
+      size: 0.28,
+      map: particleTexture,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const sootPoints = new THREE.Points(particleGeo, sootMat);
+    flameGroup.add(sootPoints);
+
+    // 10. Atmospheric Instrumentation & Orbital Telemetry Rings
     const ringGroup = new THREE.Group();
-    const ringGeo1 = new THREE.RingGeometry(6.6, 6.62, 64);
+    const ringGeo1 = new THREE.RingGeometry(6.6, 6.625, 64);
     const ringMat1 = new THREE.MeshBasicMaterial({
       color: 0x2B4BFF,
       transparent: true,
-      opacity: 0.22,
+      opacity: 0.24,
       side: THREE.DoubleSide,
     });
     const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
     ring1.rotation.x = Math.PI * 0.38;
     ringGroup.add(ring1);
 
-    const ringGeo2 = new THREE.RingGeometry(7.5, 7.515, 64);
+    const ringGeo2 = new THREE.RingGeometry(7.8, 7.818, 64);
     const ringMat2 = new THREE.MeshBasicMaterial({
       color: 0xCFC9BF,
       transparent: true,
@@ -312,16 +385,20 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
 
     flameGroup.add(ringGroup);
 
-    // 9. Point Lights: Electric Cobalt Key + Amber Fill
-    const cobaltLight = new THREE.PointLight(0x2B4BFF, 4.5, 30);
-    cobaltLight.position.set(6, 4, 8);
+    // 11. Point Lights: Electric Cobalt Key + Ambient Glow
+    const cobaltLight = new THREE.PointLight(0x2B4BFF, 5.2, 35);
+    cobaltLight.position.set(7, 5, 9);
     scene.add(cobaltLight);
 
-    const amberCoreLight = new THREE.PointLight(0xFF7A29, 2.8, 15);
+    const cyanRimLight = new THREE.PointLight(0x38bdf8, 3.2, 25);
+    cyanRimLight.position.set(-8, -4, 5);
+    scene.add(cyanRimLight);
+
+    const amberCoreLight = new THREE.PointLight(0xFF7A29, 2.6, 16);
     amberCoreLight.position.set(0, 0, 0);
     scene.add(amberCoreLight);
 
-    // 10. Pointer-based Parallax & Interactive Rotation
+    // 12. Pointer-based Parallax & Interactive Drag Rotation
     const mouse = {
       x: 0,
       y: 0,
@@ -365,7 +442,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     window.addEventListener("mouseup", handlePointerUp);
     container.addEventListener("mousedown", handlePointerDown);
 
-    // 11. Responsive Resize Observer
+    // 13. Responsive Resize Observer
     const handleResize = () => {
       if (!container) return;
       width = container.clientWidth || 800;
@@ -378,7 +455,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
 
-    // 12. Main Animation & Render Loop
+    // 14. Main Animation & Render Loop
     let clock = new THREE.Clock();
 
     const animate = () => {
@@ -394,11 +471,15 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       mouse.x += (mouse.targetX - mouse.x) * 0.045;
       mouse.y += (mouse.targetY - mouse.y) * 0.045;
 
-      // Natural, hypnotic slow 3D rotation in 0g
+      // Natural, continuous slow rotation in 0g
       if (!mouse.isDragging) {
         flameGroup.rotation.y += 0.0022;
         flameGroup.rotation.z = Math.sin(elapsedTime * 0.35) * 0.06;
       }
+
+      // Subtle floating levitation in microgravity
+      flameGroup.position.y = Math.sin(elapsedTime * 0.75) * 0.36;
+      flameGroup.position.x = Math.cos(elapsedTime * 0.52) * 0.15;
 
       // Parallax camera displacement
       camera.position.x = mouse.x * 1.8;
@@ -406,33 +487,58 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       camera.lookAt(0, 0, 0);
 
       // Rotate orbital rings
-      ring1.rotation.z += 0.0015;
-      ring2.rotation.z -= 0.001;
+      ring1.rotation.z += 0.0016;
+      ring2.rotation.z -= 0.0011;
 
-      // Update particles
-      const positions = particleGeo.attributes.position.array as Float32Array;
+      // Update Keplerian Orbit Particles & Fading Trails
+      const trailArray = trailGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < orbitCount; i++) {
+        const o = orbits[i];
+        o.phase += o.speed;
+
+        // Current 3D position on inclined orbit
+        const currentPos = new THREE.Vector3(
+          Math.cos(o.phase) * o.radius,
+          Math.sin(o.phase) * o.radius * Math.sin(o.inclination),
+          Math.sin(o.phase) * o.radius * Math.cos(o.inclination)
+        ).applyAxisAngle(new THREE.Vector3(0, 1, 0), o.azimuth);
+
+        // Update history trail segments
+        o.history.unshift(currentPos.clone());
+        o.history.pop();
+
+        for (let s = 0; s < trailSegments; s++) {
+          const pt = o.history[s];
+          const idx = (i * trailSegments + s) * 3;
+          trailArray[idx] = pt.x;
+          trailArray[idx + 1] = pt.y;
+          trailArray[idx + 2] = pt.z;
+        }
+      }
+      trailGeo.attributes.position.needsUpdate = true;
+
+      // Update Microscopic Soot Nanoparticles
+      const sootPos = particleGeo.attributes.position.array as Float32Array;
       for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] += particleVelocities[i * 3];
-        positions[i * 3 + 1] += particleVelocities[i * 3 + 1];
-        positions[i * 3 + 2] += particleVelocities[i * 3 + 2];
+        sootPos[i * 3] += particleVelocities[i * 3];
+        sootPos[i * 3 + 1] += particleVelocities[i * 3 + 1];
+        sootPos[i * 3 + 2] += particleVelocities[i * 3 + 2];
 
-        // Orbit curvature
         const dist = Math.sqrt(
-          positions[i * 3] ** 2 +
-          positions[i * 3 + 1] ** 2 +
-          positions[i * 3 + 2] ** 2
+          sootPos[i * 3] ** 2 +
+          sootPos[i * 3 + 1] ** 2 +
+          sootPos[i * 3 + 2] ** 2
         );
 
-        if (dist > 9.5 || dist < 3.8) {
-          // Wrap gently around the sphere
+        if (dist > 9.8 || dist < 3.8) {
           const u = Math.random();
           const v = Math.random();
           const theta = u * 2.0 * Math.PI;
           const phi = Math.acos(2.0 * v - 1.0);
           const r = 4.8 + Math.random() * 3.5;
-          positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-          positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-          positions[i * 3 + 2] = r * Math.cos(phi);
+          sootPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+          sootPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+          sootPos[i * 3 + 2] = r * Math.cos(phi);
         }
       }
       particleGeo.attributes.position.needsUpdate = true;
@@ -449,15 +555,19 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       container.removeEventListener("mousedown", handlePointerDown);
       resizeObserver.disconnect();
 
-      // Dispose Three.js resources
+      // Dispose Three.js resources cleanly
       outerGeo.dispose();
       outerMat.dispose();
       midGeo.dispose();
       midMat.dispose();
       coreGeo.dispose();
       coreMat.dispose();
+      atmosphericHaloGeo.dispose();
+      atmosphericHaloMat.dispose();
+      trailGeo.dispose();
+      orbitMat.dispose();
       particleGeo.dispose();
-      particleMat.dispose();
+      sootMat.dispose();
       particleTexture.dispose();
       ringGeo1.dispose();
       ringMat1.dispose();
@@ -503,11 +613,10 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       </div>
 
       <div className="absolute bottom-4 left-4 pointer-events-none hidden md:flex items-center gap-3 font-mono text-[9px] text-stone-muted/80 tracking-widest">
-        <span>[ DRAG TO ROTATE 3D FLAME ]</span>
+        <span>[ DRAG TO ROTATE 3D SPHERE ]</span>
         <span>•</span>
-        <span>[ 3-LAYER CH* RADICAL EMISSION ]</span>
+        <span>[ ORBITAL RADICAL PARTICLES ]</span>
       </div>
     </div>
   );
 }
-

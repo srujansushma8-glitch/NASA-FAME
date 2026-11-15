@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { aiSafetyCapabilities } from "@/content";
 import { Cpu, Sparkles, ArrowRight, ShieldCheck, Flame, Radio } from "lucide-react";
 
@@ -18,12 +19,16 @@ export function AISafetySection() {
   ];
 
   return (
-    <section id="ai-safety" className="relative py-28 bg-ink border-t border-stone-border/40 overflow-hidden">
-      <div className="absolute inset-0 monolith-grid pointer-events-none opacity-40" />
-
+    <section id="ai-safety" className="relative py-28 bg-ink/30 border-t border-stone-border/40 overflow-hidden">
       <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10 space-y-16">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-stone-border/50 pb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-stone-border/50 pb-8"
+        >
           <div className="max-w-2xl space-y-3">
             <div className="flex items-center gap-3">
               <span className="font-mono text-xs text-cobalt font-bold tracking-widest">
@@ -46,19 +51,28 @@ export function AISafetySection() {
 
           <Link
             href="/assistant"
-            className="px-5 py-2.5 rounded bg-cobalt hover:bg-cobalt-hover text-white font-mono text-xs uppercase tracking-widest font-semibold transition-all flex items-center gap-2 self-start md:self-auto shrink-0 shadow-[0_0_20px_rgba(43,75,255,0.3)]"
+            className="px-5 py-2.5 rounded bg-cobalt hover:bg-cobalt-hover text-white font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 flex items-center gap-2 self-start md:self-auto shrink-0 shadow-[0_0_20px_rgba(43,75,255,0.35)] hover:shadow-[0_0_35px_rgba(43,75,255,0.6)] hover:scale-[1.02] active:scale-[0.98]"
           >
             <Cpu className="size-4" />
             <span>Launch Full Analyzer</span>
           </Link>
-        </div>
+        </motion.div>
 
         {/* 4 Capabilities Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {aiSafetyCapabilities.map((cap) => (
-            <div
+          {aiSafetyCapabilities.map((cap, idx) => (
+            <motion.div
               key={cap.code}
-              className="p-6 rounded-lg bg-ink-surface border border-stone-border/60 hover:border-cobalt/60 transition-all flex flex-col justify-between space-y-4"
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{
+                duration: 0.75,
+                delay: idx * 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              whileHover={{ y: -4 }}
+              className="p-6 rounded-lg bg-ink-surface/90 border border-stone-border/60 hover:border-cobalt/60 hover:shadow-[0_0_25px_rgba(43,75,255,0.18)] transition-all flex flex-col justify-between space-y-4"
             >
               <div className="space-y-3">
                 <div className="font-mono text-xs text-cobalt font-bold tracking-widest">
@@ -76,15 +90,21 @@ export function AISafetySection() {
                 <span>RATING</span>
                 <span className="text-stone-light font-medium">{cap.metric}</span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Interactive Query Sandbox Terminal */}
-        <div className="p-6 sm:p-8 rounded-xl bg-ink-surface border border-stone-border space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="p-6 sm:p-8 rounded-xl bg-ink-surface/95 border border-stone-border/70 hover:border-cobalt/40 transition-colors space-y-6 shadow-2xl"
+        >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-border/50 pb-4 font-mono text-xs">
             <div className="flex items-center gap-2 text-stone-light font-semibold">
-              <span className="size-2 rounded-full bg-cobalt animate-ping" />
+              <span className="size-2 rounded-full bg-cobalt animate-ping shadow-[0_0_8px_#2B4BFF]" />
               <span>LIVE AI REASONING PREVIEW // PINN SURROGATE</span>
             </div>
             <span className="text-stone-muted">MODEL: CIR-PINN-v2.4 (OFFLINE TRAINED)</span>
@@ -100,46 +120,54 @@ export function AISafetySection() {
                 <button
                   key={idx}
                   onClick={() => setActiveQuery(q)}
-                  className={`px-3 py-1.5 rounded text-left font-mono text-xs border transition-all ${
+                  className={`px-3 py-1.5 rounded text-left font-mono text-xs transition-all ${
                     activeQuery === q
-                      ? "bg-cobalt/20 text-white border-cobalt ring-1 ring-cobalt/40"
-                      : "bg-ink text-stone-dim border-stone-border/60 hover:text-stone hover:border-stone/40"
+                      ? "bg-cobalt/20 border border-cobalt text-white shadow-[0_0_15px_rgba(43,75,255,0.25)]"
+                      : "bg-ink/80 border border-stone-border/50 text-stone-dim hover:text-stone-light hover:border-stone-border"
                   }`}
                 >
-                  Query 0{idx + 1}
+                  {q}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Terminal Box */}
-          <div className="p-5 rounded-lg bg-ink border border-stone-border/70 font-mono text-xs space-y-4">
-            <div className="flex items-center gap-2 text-stone-light">
-              <span className="text-cobalt font-bold">query &gt;</span>
-              <span>{activeQuery}</span>
+          {/* Output Display */}
+          <div className="p-4 rounded-lg bg-ink/90 border border-stone-border/50 space-y-2 font-mono text-xs">
+            <div className="flex items-center justify-between text-stone-muted text-[10px]">
+              <span>ACTIVE INFERENCE RESULT</span>
+              <span className="text-cobalt">CONFIDENCE: 98.7%</span>
             </div>
-
-            <div className="p-4 rounded bg-ink-surface/80 border border-stone-border/40 space-y-3">
-              <div className="flex items-center gap-2 text-cobalt text-[11px] font-semibold">
-                <Sparkles className="size-3.5" />
-                <span>AI SCIENTIFIC OBSERVATION & SAFETY SYNTHESIS</span>
-              </div>
-              <p className="font-sans text-sm text-stone leading-relaxed">
-                {activeQuery.includes("spherical") ? (
-                  "In microgravity (g ≈ 0), buoyant upward convection vanishes completely because the Grashof number Gr drops below 0.01. Thermal expansion of heated gases produces no Archimedean lift. Consequently, fresh oxidizer is supplied purely via isotropic Fickian mass diffusion (Burke-Schumann regime), forming a quiescent, spherical blue flame shell."
-                ) : activeQuery.includes("Grashof") ? (
-                  "The Grashof number Gr = g·β·ΔT·L³/ν² quantifies the ratio of buoyant forces to viscous forces. At 1g, Gr ≈ 10⁴ causes unstable buoyant plume necking and vortex shedding at ~12–15 Hz. In 0g freefall, Gr drops to 10⁻⁴, terminating vortex shedding and yielding zero flickering frequency."
-                ) : activeQuery.includes("radiative") ? (
-                  "In 0g, combustion rates are low due to diffusion resistance. At reduced fuel supply, volumetric radiative heat loss from CO₂ and H₂O molecules exceeds chemical heat release. The peak flame temperature falls below the kinetic extinction threshold (~1450 K), causing sudden radiative extinction or transition into non-luminous cool flames."
-                ) : (
-                  "In spacecraft cabins, smoldering materials can persist undetected in low oxygen environments. When cabin ventilation systems or air fans activate, the sudden forced convective flux supplies fresh oxidizer while dispersing localized heat, causing smoldering embers to explosively transition into open flaming."
-                )}
-              </p>
+            <div className="text-stone-light leading-relaxed">
+              {activeQuery.includes("spherical") ? (
+                <>
+                  <span className="text-cobalt font-semibold">[0G SPHERICAL DIFFUSION]: </span>
+                  Buoyant acceleration term (g · β · ΔT) vanishes. Radial molecular diffusion dominates across all coordinate axes. 
+                  Flame envelope expands into a calm, symmetric sphere with zero flicker instability (Grashof Gr &lt; 0.01).
+                </>
+              ) : activeQuery.includes("Grashof") ? (
+                <>
+                  <span className="text-cobalt font-semibold">[GRASHOF NUMBER SCALING]: </span>
+                  Gr = g · β · ΔT · L³ / ν². On Earth, Gr &gt; 10⁴ drives turbulent vortex shedding generating the classic 10–15 Hz flicker. 
+                  In orbit, Gr drops by 4+ orders of magnitude, eliminating all buoyant hydrodynamic instabilities.
+                </>
+              ) : activeQuery.includes("radiative extinction") ? (
+                <>
+                  <span className="text-flame font-semibold">[RADIATIVE QUENCHING LIMIT]: </span>
+                  In the absence of buoyant convective sweeping, accumulated CO₂ and H₂O product shells emit high infrared radiation, 
+                  cooling the reaction below chemical kinetic autoignition limits.
+                </>
+              ) : (
+                <>
+                  <span className="text-flame font-semibold">[SMOLDERING REIGNITION HAZARD]: </span>
+                  Hidden deep-seated smoldering inside ventilation ducts maintains elevated temperatures without flame. 
+                  Sudden air current re-introduction spikes Damköhler number (Da), initiating rapid transition to open combustion.
+                </>
+              )}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
-

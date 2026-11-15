@@ -103,6 +103,29 @@ html.lenis body {
     box-shadow: 0 0 45px -2px rgba(255, 122, 41, 0.35);
   }
 
+  /* Interactive Button Micro-interactions */
+  .btn-cinematic {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-cinematic:hover {
+    transform: translateY(-1.5px) scale(1.02);
+    box-shadow: 0 0 30px rgba(43, 75, 255, 0.55);
+  }
+  .btn-cinematic:active {
+    transform: translateY(0.5px) scale(0.98);
+  }
+
+  /* Card interactive spotlight hover flare */
+  .card-cinematic {
+    position: relative;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-cinematic:hover {
+    transform: translateY(-3px);
+    border-color: rgba(43, 75, 255, 0.5);
+    box-shadow: 0 10px 35px -10px rgba(43, 75, 255, 0.22);
+  }
+
   [data-reveal] {
     opacity: 0;
     transform: translate3d(0, 20px, 0);
