@@ -21,11 +21,13 @@ import { useAuth } from "@/lib/auth-context";
 import { LoadingSpinner } from "@/components/ui/EmptyState";
 
 function LoginContent() {
-  const { user, login, logout, isAuthenticated } = useAuth();
+  const { user, login, logout, clearSession, isAuthenticated } = useAuth();
   const router = useRouter();
   const [redirectTarget, setRedirectTarget] = useState("/dashboard");
 
   useEffect(() => {
+    // Every time login page is accessed, enforce clean unauthenticated state
+    clearSession();
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const target = params.get("redirect");
@@ -108,12 +110,10 @@ function LoginContent() {
 
           <div className="space-y-1.5 pt-1">
             <h1 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-white uppercase">
-              {isAuthenticated ? "Session Established" : "Welcome back, Commander"}
+              Welcome back, Commander
             </h1>
             <p className="font-mono text-xs text-stone-dim uppercase tracking-wider">
-              {isAuthenticated
-                ? "Active flight clearance ready for deployment"
-                : "Enter credentials to access ISS CIR research systems"}
+              Enter credentials to access ISS CIR research systems
             </p>
           </div>
         </div>
@@ -127,63 +127,14 @@ function LoginContent() {
           <span className="text-cobalt font-semibold">API: 8000 NOMINAL</span>
         </div>
 
-        {/* Condition 1: User Already Has Active Clearance */}
-        {isAuthenticated && user ? (
-          <div className="rounded-xl bg-ink-surface/85 backdrop-blur-xl p-6 sm:p-8 space-y-6 border border-stone-border/70 shadow-[0_0_50px_rgba(0,0,0,0.85)]">
-            <div className="flex items-center gap-3.5">
-              <div className="size-11 rounded-full bg-cobalt/20 border border-cobalt/60 flex items-center justify-center text-cobalt shadow-[0_0_15px_rgba(43,75,255,0.35)]">
-                <CheckCircle2 className="size-6 text-cobalt" />
-              </div>
-              <div>
-                <div className="font-mono text-[10px] text-cobalt font-bold tracking-widest uppercase">
-                  Active Mission Clearance Verified
-                </div>
-                <div className="font-display text-lg text-white font-bold tracking-wide">
-                  {user.name}
-                </div>
-              </div>
+        {/* Authentication Form Always Displayed */}
+        <div className="rounded-xl bg-ink-surface/85 backdrop-blur-xl p-6 sm:p-8 space-y-6 border border-stone-border/70 shadow-[0_0_50px_rgba(0,0,0,0.85)]">
+          {error && (
+            <div className="p-3.5 rounded bg-ink border border-flame/60 text-xs text-stone-light flex items-start gap-2.5 font-mono">
+              <AlertTriangle className="size-4 text-flame mt-0.5 shrink-0" />
+              <span>{error}</span>
             </div>
-
-            <div className="p-3.5 rounded bg-ink/80 border border-stone-border/40 font-mono text-xs text-stone-dim space-y-1.5">
-              <div className="flex justify-between">
-                <span>CLEARANCE:</span>
-                <span className="text-cobalt font-semibold">{user.clearance_level || "LEVEL 4"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>ROLE:</span>
-                <span className="text-stone-light">{user.role || "Flight Commander"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>STATION:</span>
-                <span className="text-stone-light">{user.station || "ISS CIR ACME"}</span>
-              </div>
-            </div>
-
-            <div className="space-y-3 pt-2">
-              <Link
-                href={redirectTarget}
-                className="w-full py-3.5 rounded bg-cobalt hover:bg-cobalt-hover text-white font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(43,75,255,0.45)] hover:shadow-[0_0_40px_rgba(43,75,255,0.7)] transition-all"
-              >
-                <span>Proceed to Mission Control</span>
-                <ArrowRight className="size-4" />
-              </Link>
-              <button
-                onClick={() => logout()}
-                className="w-full py-2.5 rounded bg-ink hover:bg-stone/10 border border-stone-border/40 text-stone-dim hover:text-white font-mono text-xs uppercase tracking-widest transition-all"
-              >
-                Switch Station Account / Sign Out
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* Condition 2: Authentication Form */
-          <div className="rounded-xl bg-ink-surface/85 backdrop-blur-xl p-6 sm:p-8 space-y-6 border border-stone-border/70 shadow-[0_0_50px_rgba(0,0,0,0.85)]">
-            {error && (
-              <div className="p-3.5 rounded bg-ink border border-flame/60 text-xs text-stone-light flex items-start gap-2.5 font-mono">
-                <AlertTriangle className="size-4 text-flame mt-0.5 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
+          )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Username / Email Address */}
@@ -329,7 +280,6 @@ function LoginContent() {
               </div>
             </div>
           </div>
-        )}
 
         {/* Footer Subtext */}
         <div className="text-center font-mono text-[10px] text-stone-muted uppercase tracking-wider">
