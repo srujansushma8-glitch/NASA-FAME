@@ -131,8 +131,9 @@ def seed_database():
 
         print("Seeding database with reference NASA microgravity experiments...")
         for data in REFERENCE_EXPERIMENTS:
-            meta_data = data.pop("metadata", None)
-            exp = Experiment(**data)
+            data_copy = dict(data)
+            meta_data = data_copy.pop("metadata", None)
+            exp = Experiment(**data_copy)
             db.add(exp)
             db.flush()
 

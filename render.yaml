@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nasa-flame-backend
+    runtime: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install --upgrade pip && pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        value: sqlite:///./nasa_flame.db
+      - key: CORS_ORIGINS
+        value: "https://*.vercel.app,http://localhost:3000,http://127.0.0.1:3000,*"

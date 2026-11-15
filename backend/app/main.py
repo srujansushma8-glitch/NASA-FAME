@@ -45,6 +45,12 @@ async def lifespan(app: FastAPI):
     """Application lifecycle events: initializes database and services on startup."""
     logger.info("Initializing NASA-FLAME Backend Services...")
     init_db()
+    try:
+        from database.seeds.seed_experiments import seed_database
+        seed_database()
+        logger.info("Database verification and NASA seed check complete.")
+    except Exception as seed_err:
+        logger.warning(f"Seed verification notice: {seed_err}")
     logger.info(
         f"NASA-FLAME Backend started successfully in {settings.APP_ENV} mode "
         f"using {'SQLite' if settings.is_sqlite else 'PostgreSQL'}."
@@ -70,9 +76,11 @@ app = FastAPI(
 )
 
 # Configure Cross-Origin Resource Sharing (CORS)
+# Supports localhost, Vercel deployments (*.vercel.app), and Render domains (*.onrender.com)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.onrender\.com|http://localhost:.*|http://127\.0\.0\.1:.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
