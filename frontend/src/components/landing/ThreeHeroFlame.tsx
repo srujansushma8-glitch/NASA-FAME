@@ -35,8 +35,8 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
 
     // 1. Scene & Camera Setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 18.5);
+    const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 1000);
+    camera.position.set(0, 0, 24.0);
 
     // 2. High-Performance Renderer with ACES Tone Mapping
     const renderer = new THREE.WebGLRenderer({
@@ -128,7 +128,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       }
     `;
 
-    // Fragment Shader: Outer Cobalt Radical Sheath (#2B4BFF) with Fresnel glow
+    // Fragment Shader: Outer Cobalt Radical Sheath (#2B4BFF) with Fresnel glow & soft silhouette taper
     const outerFlameFragmentShader = `
       uniform float uTime;
       uniform vec3 uColorCore;
@@ -139,20 +139,22 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
 
       void main() {
         vec3 viewDir = normalize(-vPosition);
-        float fresnel = 1.0 - max(dot(viewDir, vNormal), 0.0);
-        fresnel = pow(fresnel, 2.2);
+        float NdotV = max(dot(viewDir, vNormal), 0.0);
+        float fresnel = 1.0 - NdotV;
+        fresnel = pow(fresnel, 2.0);
 
-        // Electric Cobalt with subtle cyan tinting
+        // Electric Cobalt with subtle cyan tinting (CH* / C2* chemiluminescence 430nm)
         vec3 color = mix(uColorCore, uColorEdge, fresnel * 0.85 + (vNoise * 0.15));
         
-        // Alpha falloff toward edges
-        float alpha = clamp(fresnel * 0.95 + 0.12, 0.0, 0.92);
+        // Soft organic edge taper: smoothly decays to 0 at extreme tangent angle
+        float edgeTaper = smoothstep(0.0, 0.22, NdotV);
+        float alpha = clamp(fresnel * 0.80 * edgeTaper + (vNoise * 0.06), 0.0, 0.85);
         gl_FragColor = vec4(color, alpha);
       }
     `;
 
     // 4. Glowing Blue Atmospheric Outer Layer (Rayleigh Halo Glow)
-    const atmosphericHaloGeo = new THREE.SphereGeometry(6.3, 36, 36);
+    const atmosphericHaloGeo = new THREE.SphereGeometry(4.8, 48, 48);
     const atmosphericHaloMat = new THREE.ShaderMaterial({
       vertexShader: `
         varying vec3 vNormal;
@@ -168,15 +170,17 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
         varying vec3 vPosition;
         void main() {
           vec3 viewDir = normalize(-vPosition);
-          float fresnel = 1.0 - max(dot(viewDir, vNormal), 0.0);
-          float halo = pow(fresnel, 2.6);
+          float NdotV = max(dot(viewDir, vNormal), 0.0);
+          float fresnel = 1.0 - NdotV;
+          float halo = pow(fresnel, 3.2);
           
-          // Outer Rayleigh blue spaceflight glow
-          vec3 deepCobalt = vec3(0.12, 0.25, 0.95);
-          vec3 cyanAtmosphere = vec3(0.24, 0.72, 1.0);
+          // Soft outer falloff so halo never hard-cuts
+          float edgeTaper = smoothstep(0.0, 0.25, NdotV);
+          vec3 deepCobalt = vec3(0.08, 0.18, 0.88);
+          vec3 cyanAtmosphere = vec3(0.20, 0.65, 1.0);
           vec3 color = mix(deepCobalt, cyanAtmosphere, fresnel * 0.7);
 
-          gl_FragColor = vec4(color, clamp(halo * 0.65, 0.0, 0.85));
+          gl_FragColor = vec4(color, clamp(halo * 0.52 * edgeTaper, 0.0, 0.65));
         }
       `,
       transparent: true,
@@ -188,14 +192,14 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     flameGroup.add(atmosphericHaloMesh);
 
     // 5. Layer 1: Outer Translucent Blue Quiescent Diffusion Sheath
-    const outerGeo = new THREE.IcosahedronGeometry(5.2, 32);
+    const outerGeo = new THREE.IcosahedronGeometry(3.8, 36);
     const outerMat = new THREE.ShaderMaterial({
       vertexShader: flameVertexShader,
       fragmentShader: outerFlameFragmentShader,
       uniforms: {
         uTime: { value: 0 },
         uNoiseScale: { value: 0.28 },
-        uDisplacement: { value: 0.38 },
+        uDisplacement: { value: 0.32 },
         uColorCore: { value: new THREE.Color(0x0e1b66) }, // Deep Cobalt Dark
         uColorEdge: { value: new THREE.Color(0x2B4BFF) }, // Electric Cobalt Primary
       },
@@ -208,14 +212,14 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     flameGroup.add(outerMesh);
 
     // 6. Layer 2: Intermediate High-Excitation CH* Radical Zone
-    const midGeo = new THREE.IcosahedronGeometry(4.3, 32);
+    const midGeo = new THREE.IcosahedronGeometry(2.8, 36);
     const midMat = new THREE.ShaderMaterial({
       vertexShader: flameVertexShader,
       fragmentShader: outerFlameFragmentShader,
       uniforms: {
         uTime: { value: 1.5 },
         uNoiseScale: { value: 0.42 },
-        uDisplacement: { value: 0.28 },
+        uDisplacement: { value: 0.24 },
         uColorCore: { value: new THREE.Color(0x2B4BFF) },
         uColorEdge: { value: new THREE.Color(0x6082ff) }, // Bright Cobalt Luminous
       },
@@ -228,7 +232,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     flameGroup.add(midMesh);
 
     // 7. Layer 3: Inner Thermal Combustion Core (Warm Amber/Orange subtle core)
-    const coreGeo = new THREE.SphereGeometry(2.4, 32, 32);
+    const coreGeo = new THREE.SphereGeometry(1.6, 36, 36);
     const coreMat = new THREE.ShaderMaterial({
       vertexShader: flameVertexShader,
       fragmentShader: `
@@ -239,21 +243,21 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
 
         void main() {
           vec3 viewDir = normalize(-vPosition);
-          float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);
+          float NdotV = max(dot(viewDir, vNormal), 0.0);
           
-          vec3 amberDeep = vec3(1.0, 0.478, 0.161);
-          vec3 amberGlow = vec3(1.0, 0.72, 0.25);
-          
+          vec3 amberDeep = vec3(1.0, 0.42, 0.12);
+          vec3 amberGlow = vec3(1.0, 0.75, 0.28);
           vec3 color = mix(amberDeep, amberGlow, vNoise * 0.5 + 0.5);
-          float alpha = clamp(pow(1.0 - rim, 1.4) * 0.75, 0.0, 0.85);
           
+          // Luminous inner fuel droplet boundary core
+          float alpha = clamp(pow(NdotV, 1.1) * 0.85, 0.0, 0.88);
           gl_FragColor = vec4(color, alpha);
         }
       `,
       uniforms: {
         uTime: { value: 3.0 },
         uNoiseScale: { value: 0.65 },
-        uDisplacement: { value: 0.18 },
+        uDisplacement: { value: 0.16 },
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -264,7 +268,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     flameGroup.add(coreMesh);
 
     // 8. Layer 4: Orbiting Particles with Fading Motion Trails
-    const orbitCount = 42;
+    const orbitCount = 36;
     const trailSegments = 8;
     const totalTrailPoints = orbitCount * trailSegments;
 
@@ -284,7 +288,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
 
     const orbits: OrbitBody[] = [];
     for (let i = 0; i < orbitCount; i++) {
-      const radius = 5.6 + (i / orbitCount) * 3.6;
+      const radius = 4.2 + (i / orbitCount) * 1.0;
       const speed = (0.012 + Math.random() * 0.018) * (Math.random() < 0.5 ? 1 : -1);
       const inclination = (Math.random() - 0.5) * Math.PI * 0.85;
       const azimuth = Math.random() * Math.PI * 2;
@@ -316,7 +320,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     const particleTexture = new THREE.CanvasTexture(particleCanvas);
 
     const orbitMat = new THREE.PointsMaterial({
-      size: 0.38,
+      size: 0.32,
       map: particleTexture,
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -326,7 +330,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     flameGroup.add(orbitPoints);
 
     // 9. Floating Microgravity Particulate Motes (Soot Nanoparticles in 0g)
-    const particleCount = 140;
+    const particleCount = 90;
     const particleGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
     const particleVelocities = new Float32Array(particleCount * 3);
@@ -336,20 +340,20 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
       const v = Math.random();
       const theta = u * 2.0 * Math.PI;
       const phi = Math.acos(2.0 * v - 1.0);
-      const r = 4.6 + Math.random() * 4.4;
+      const r = 3.2 + Math.random() * 2.0;
 
       particlePositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       particlePositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       particlePositions[i * 3 + 2] = r * Math.cos(phi);
 
-      particleVelocities[i * 3] = (Math.random() - 0.5) * 0.005;
-      particleVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.005;
-      particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.005;
+      particleVelocities[i * 3] = (Math.random() - 0.5) * 0.004;
+      particleVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.004;
+      particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.004;
     }
 
     particleGeo.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
     const sootMat = new THREE.PointsMaterial({
-      size: 0.28,
+      size: 0.24,
       map: particleTexture,
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -360,7 +364,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
 
     // 10. Atmospheric Instrumentation & Orbital Telemetry Rings
     const ringGroup = new THREE.Group();
-    const ringGeo1 = new THREE.RingGeometry(6.6, 6.625, 64);
+    const ringGeo1 = new THREE.RingGeometry(4.8, 4.82, 64);
     const ringMat1 = new THREE.MeshBasicMaterial({
       color: 0x2B4BFF,
       transparent: true,
@@ -371,7 +375,7 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     ring1.rotation.x = Math.PI * 0.38;
     ringGroup.add(ring1);
 
-    const ringGeo2 = new THREE.RingGeometry(7.8, 7.818, 64);
+    const ringGeo2 = new THREE.RingGeometry(5.4, 5.418, 64);
     const ringMat2 = new THREE.MeshBasicMaterial({
       color: 0xCFC9BF,
       transparent: true,
@@ -386,15 +390,15 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     flameGroup.add(ringGroup);
 
     // 11. Point Lights: Electric Cobalt Key + Ambient Glow
-    const cobaltLight = new THREE.PointLight(0x2B4BFF, 5.2, 35);
-    cobaltLight.position.set(7, 5, 9);
+    const cobaltLight = new THREE.PointLight(0x2B4BFF, 4.2, 30);
+    cobaltLight.position.set(6, 4, 8);
     scene.add(cobaltLight);
 
-    const cyanRimLight = new THREE.PointLight(0x38bdf8, 3.2, 25);
-    cyanRimLight.position.set(-8, -4, 5);
+    const cyanRimLight = new THREE.PointLight(0x38bdf8, 2.5, 20);
+    cyanRimLight.position.set(-6, -3, 4);
     scene.add(cyanRimLight);
 
-    const amberCoreLight = new THREE.PointLight(0xFF7A29, 2.6, 16);
+    const amberCoreLight = new THREE.PointLight(0xFF7A29, 3.2, 14);
     amberCoreLight.position.set(0, 0, 0);
     scene.add(amberCoreLight);
 
@@ -530,12 +534,12 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
           sootPos[i * 3 + 2] ** 2
         );
 
-        if (dist > 9.8 || dist < 3.8) {
+        if (dist > 5.5 || dist < 2.5) {
           const u = Math.random();
           const v = Math.random();
           const theta = u * 2.0 * Math.PI;
           const phi = Math.acos(2.0 * v - 1.0);
-          const r = 4.8 + Math.random() * 3.5;
+          const r = 3.2 + Math.random() * 2.0;
           sootPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
           sootPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
           sootPos[i * 3 + 2] = r * Math.cos(phi);
@@ -600,6 +604,10 @@ export function ThreeHeroFlame({ className = "" }: ThreeHeroFlameProps) {
     <div
       ref={mountRef}
       className={`relative w-full h-full select-none cursor-grab active:cursor-grabbing ${className}`}
+      style={{
+        maskImage: "radial-gradient(circle at center, black 46%, rgba(0,0,0,0.85) 64%, transparent 88%)",
+        WebkitMaskImage: "radial-gradient(circle at center, black 46%, rgba(0,0,0,0.85) 64%, transparent 88%)",
+      }}
       title="Interactive 3D Microgravity Flame: Drag to rotate, move cursor for parallax"
     >
       {/* Precision Instrument HUD overlay on the 3D canvas */}

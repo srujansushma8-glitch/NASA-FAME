@@ -3,6 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/auth-context";
+import { SpaceEnvironment } from "@/components/effects/SpaceEnvironment";
 
 export const metadata: Metadata = {
   title: "NASA-FLAME • Flame in Freefall | Scientific Research Platform",
@@ -25,10 +26,13 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-void text-white font-sans antialiased selection:bg-earth/30 selection:text-white overflow-x-hidden">
+      <body className="min-h-screen flex flex-col bg-void text-white font-sans antialiased selection:bg-earth/30 selection:text-white overflow-x-hidden relative">
+        {/* Global Persistent Multilayer Space Environment & Interactive Cursor Spotlight */}
+        <SpaceEnvironment />
+
         <AuthProvider>
           <Navbar />
-          <main className="flex-1 flex flex-col">{children}</main>
+          <main className="flex-1 flex flex-col relative z-10">{children}</main>
           <Footer />
         </AuthProvider>
       </body>

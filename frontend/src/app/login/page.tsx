@@ -180,9 +180,31 @@ function LoginContent() {
           </form>
 
           {/* Institutional Test Accounts */}
-          <div className="pt-4 border-t border-stone-border/60 space-y-2">
+          <div className="pt-4 border-t border-stone-border/60 space-y-3">
+            {/* 1-Click Instant Demo Access Button */}
+            <button
+              type="button"
+              onClick={async () => {
+                setIsSubmitting(true);
+                try {
+                  await login("commander@nasa-flame.gov", "MissionControl!", true);
+                  router.push(redirectTarget);
+                } catch {
+                  setEmail("commander@nasa-flame.gov");
+                  setPassword("MissionControl!");
+                } finally {
+                  setIsSubmitting(false);
+                }
+              }}
+              disabled={isSubmitting}
+              className="w-full py-2.5 px-4 rounded bg-cobalt/10 border border-cobalt/50 hover:bg-cobalt/25 text-white font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(43,75,255,0.2)]"
+            >
+              <Flame className="size-3.5 text-cobalt animate-pulse" />
+              <span>Instant Demo Access (1-Click)</span>
+            </button>
+
             <span className="font-mono text-[10px] tracking-widest text-stone-muted uppercase block text-center">
-              Institutional Test Accounts
+              Pre-Configured Test Clearances
             </span>
             <div className="grid grid-cols-2 gap-2">
               <button

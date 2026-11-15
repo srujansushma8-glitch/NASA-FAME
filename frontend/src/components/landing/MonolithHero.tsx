@@ -101,20 +101,19 @@ export function MonolithHero() {
               </div>
             </motion.div>
 
-            {/* Large headline: FIRE BEYOND GRAVITY. */}
+            {/* Large headline: FIRE BEYOND GRAVITY */}
             <motion.h1
               variants={headlineVariants}
-              className="font-display text-hero font-extrabold text-white uppercase tracking-tightest leading-[0.88] select-none"
+              className="font-display text-[clamp(2.5rem,5.2vw,5.5rem)] font-extrabold text-white uppercase tracking-tightest leading-[0.92] select-none"
             >
-              <div className="overflow-hidden">
-                <span className="inline-block">{heroContent.headlineLine1}</span>
+              <div>
+                <span className="inline-block whitespace-nowrap">{heroContent.headlineLine1}</span>
               </div>
-              <div className="overflow-hidden text-stone">
-                <span className="inline-block">{heroContent.headlineLine2}</span>
+              <div className="text-stone">
+                <span className="inline-block whitespace-nowrap">{heroContent.headlineLine2}</span>
               </div>
-              <div className="overflow-hidden text-white flex items-baseline">
-                <span className="inline-block">{heroContent.headlineLine3}</span>
-                <span className="size-3 rounded-full bg-cobalt inline-block ml-2 mb-1 shadow-[0_0_15px_#2B4BFF]" />
+              <div className="text-white flex items-baseline">
+                <span className="inline-block whitespace-nowrap">{heroContent.headlineLine3}</span>
               </div>
             </motion.h1>
 
@@ -140,7 +139,7 @@ export function MonolithHero() {
 
               {/* [ ENTER MISSION CONTROL ] */}
               <Link
-                href="/dashboard"
+                href="/login"
                 className="px-6 sm:px-8 py-3.5 rounded bg-cobalt hover:bg-cobalt-hover text-white font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 shadow-[0_0_25px_rgba(43,75,255,0.4)] hover:shadow-[0_0_40px_rgba(43,75,255,0.65)] hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2.5"
               >
                 <Activity className="size-4 text-white" />

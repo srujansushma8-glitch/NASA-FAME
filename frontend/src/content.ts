@@ -20,14 +20,14 @@ export const nav = [
   { label: "03 // 3D EXPLORER", href: "#explorer" },
   { label: "04 // WORKFLOW", href: "#workflow" },
   { label: "05 // AI SAFETY", href: "#ai-safety" },
-  { label: "ENTER MISSION CONTROL", href: "/dashboard", isCta: true },
+  { label: "ENTER MISSION CONTROL", href: "/login", isCta: true },
 ];
 
 export const heroContent = {
   missionTag: "NASA-FLAME // EXPEDITION 71 // CIR FLIGHT SCIENCE",
   headlineLine1: "FIRE",
   headlineLine2: "BEYOND",
-  headlineLine3: "GRAVITY.",
+  headlineLine3: "GRAVITY",
   supportingText: "Understanding combustion in microgravity. Engineering safer fire environments beyond Earth.",
   btnExplore: "EXPLORE THE MISSION",
   btnEnter: "ENTER MISSION CONTROL",
